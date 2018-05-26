@@ -1,0 +1,9 @@
+// rem 基准
+$screen-width: 37.5;
+
+@function rem($px) {
+  	@return $px / $screen-width * 1rem;
+}
+body{
+  background: red;
+}

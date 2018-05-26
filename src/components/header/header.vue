@@ -1,0 +1,63 @@
+<template>
+  <div class="header">
+    <div class="header-con">
+      <img src="./logo.png" alt="logo">
+      <span class="title">Web Music</span>
+    </div>
+    <span class="icon-mine">
+      <img src="./icon-mine.png" alt="">
+    </span>
+  </div>
+</template>
+
+<script>
+export default {
+  name: "Header",
+  data() {
+    return {};
+  }
+};
+</script>
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped lang="scss">
+@import "~assets/css/mixin.scss";
+.header {
+  width: 100%;
+  height: rem(44);
+  background: rgb(34, 34, 34);
+  line-height: rem(40);
+  text-align: center;
+  position: relative;
+}
+.header-con{
+  height: 100%;
+  display: inline;
+  margin: auto;
+}
+img {
+  display: inline-block;
+  width: rem(30);
+  height: rem(32);
+  vertical-align: middle;
+}
+.title {
+  color: #ffcd32;
+  vertical-align: middle;
+  font-size: rem(18);
+  margin-left: rem(5);
+}
+.icon-mine{
+  width: rem(44);
+  height: rem(44);
+  line-height: rem(44);
+  text-align: center;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+.icon-mine img{
+  width: rem(25);
+  height: rem(25);
+}
+</style>
