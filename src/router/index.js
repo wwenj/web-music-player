@@ -6,6 +6,12 @@ Vue.use(Router)
 export default new Router({
   routes: [
     {
+      path: '/',
+      redirect: '/recommend',
+      name: 'App',
+      component: (resolve) => require(['@/components/recommend/recommend'], resolve)
+    },
+    {
       path: '/recommend',
       name: 'Recommend',
       component: (resolve) => require(['@/components/recommend/recommend'], resolve)

@@ -20,4 +20,9 @@ export default {
 
 <style lang="scss">
 @import "assets/css/reset.css";
+#app{
+  min-width: 100vw;
+  min-height: 100vh;
+  background: rgb(34, 34, 34)
+}
 </style>

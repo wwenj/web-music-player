@@ -2,7 +2,7 @@
   <div class="header">
     <div class="header-con">
       <img src="./logo.png" alt="logo">
-      <span class="title">Web Music</span>
+      <span class="title">Listen You Heart</span>
     </div>
     <span class="icon-mine">
       <img src="./icon-mine.png" alt="">
@@ -26,9 +26,11 @@ export default {
   width: 100%;
   height: rem(44);
   background: rgb(34, 34, 34);
-  line-height: rem(40);
+  // line-height: rem(40);
   text-align: center;
   position: relative;
+  padding-top: rem(5);
+  box-sizing: border-box;
 }
 .header-con{
   height: 100%;
@@ -39,11 +41,12 @@ img {
   display: inline-block;
   width: rem(30);
   height: rem(32);
-  vertical-align: middle;
+  vertical-align: rem(10);
 }
 .title {
   color: #ffcd32;
-  vertical-align: middle;
+  // vertical-align: middle;
+  vertical-align: rem(16);
   font-size: rem(18);
   margin-left: rem(5);
 }
@@ -59,5 +62,6 @@ img {
 .icon-mine img{
   width: rem(25);
   height: rem(25);
+  vertical-align: middle;
 }
 </style>
