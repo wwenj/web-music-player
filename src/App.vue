@@ -2,7 +2,9 @@
   <div id="app">
     <Header></Header>
     <Nav></Nav>
-    <router-view></router-view>
+    <keep-alive>
+      <router-view class="con"></router-view>
+    </keep-alive>
   </div>
 </template>
 
@@ -20,9 +22,11 @@ export default {
 
 <style lang="scss">
 @import "assets/css/reset.css";
-#app{
+@import "assets/css/mixin.scss";
+#app {
   min-width: 100vw;
   min-height: 100vh;
-  background: rgb(34, 34, 34)
+  background: rgb(34, 34, 34);
+  padding-top: rem(88);
 }
 </style>

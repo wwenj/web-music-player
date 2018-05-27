@@ -32,6 +32,10 @@ export default {
   width: 100%;
   height: rem(44);
   justify-content: space-between;
+  position: fixed;
+  top: rem(44);
+  left: 0;
+  z-index: 100;
 }
 .nav {
   display: inline-block;

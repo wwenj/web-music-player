@@ -1,48 +1,86 @@
 <template>
   <div class="app">
+    <!-- 轮播 -->
     <div class="swiper-container">
-      <div class="swiper-wrapper">
-        <div class="swiper-slide">
-          1
+      <swiper class="swiper-wrapper" :options="swiperOption" ref="mySwiper">
+        <swiperSlide class="swiper-slide" v-for="(item,index) in banner" :key="index">
+          <a :href="item.linkUrl">
+            <img :src="item.picUrl" alt="">
+          </a>
+        </swiperSlide>
+        <div class="swiper-pagination" slot="pagination"></div>
+      </swiper>
+    </div>
+    <!-- 推荐歌单 -->
+    <div class="gedanTitle" v-show="discList">热门歌单推荐</div>
+    <ul class="discList-ul">
+      <li class="discList-li" v-for="(item,index) in discList" :key="index">
+        <img v-lazy="item.imgurl" alt="歌单" :title="item.creator.name">
+        <div class="discList-con">
+          <h2>{{item.creator.name}}</h2>
+          <p>{{item.dissname}}</p>
         </div>
-        <div class="swiper-slide">
-          2
-        </div>
-      </div>
-      <!-- 如果需要分页器 -->
-      <div class="swiper-pagination"></div>
-      <!-- 如果需要导航按钮 -->
+      </li>
+    </ul>
+    <div class="loading" v-show="!discList">
+      <loading></loading>
     </div>
   </div>
 </template>
 
 <script>
-import Swiper from "assets/js/swiper4";
-import { getRecommend } from "api/recommend.js";
+import "swiper/dist/css/swiper.css";
+import { swiper, swiperSlide } from "vue-awesome-swiper";
+import { getRecommend, getDiscList } from "api/recommend.js";
 import { ERR_OK } from "api/config";
+import loading from 'base/loading/loading'
 export default {
   name: "Recommend",
+  components: {
+    swiper,
+    swiperSlide,
+    loading
+  },
   data() {
-    return {};
+    return {
+      banner: "",
+      discList: "",
+      swiperOption: {
+        pagination: {
+          el: ".swiper-pagination",
+          type: "progressbar"
+        },
+        autoplay: true
+      }
+    };
   },
   created() {
     this._getRecommend();
+    this._getDiscList();
+  },
+  computed: {
+    swiper() {
+      return this.$refs.mySwiper.swiper;
+    }
   },
   mounted() {
-    new Swiper(".swiper-container", {
-      direction: "horizontal",
-      loop: true,
-      // 如果需要分页器
-      pagination: {
-        el: ".swiper-pagination"
-      }
-    });
+    this.swiper.slideTo(3, 1000, false);
   },
   methods: {
     _getRecommend: function() {
+      var that = this;
       getRecommend().then(res => {
         if (res.code === ERR_OK) {
-          console.log(res.data.slider);
+          that.banner = res.data.slider;
+        }
+      });
+    },
+    _getDiscList() {
+      var that = this;
+      getDiscList().then(res => {
+        if (res.code === ERR_OK) {
+          // console.log(res.data.list);
+          that.discList = res.data.list;
         }
       });
     }
@@ -53,5 +91,56 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
 @import "assets/css/mixin.scss";
-@import "assets/css/swiper.scss";
+.swiper-container {
+  width: 100%;
+  height: rem(150);
+  background: #fff;
+}
+.swiper-container img {
+  width: 100%;
+  height: rem(150);
+}
+.gedanTitle {
+  width: 100%;
+  height: rem(65);
+  text-align: center;
+  line-height: rem(65);
+  color: #ffcd32;
+  font-size: rem(15);
+  letter-spacing: rem(2);
+}
+.discList-ul {
+  width: 100%;
+}
+.discList-li {
+  width: 100%;
+  min-height: rem(80);
+  box-sizing: border-box;
+  padding: 0 rem(20) rem(20) rem(20);
+  position: relative;
+}
+.discList-li img {
+  width: rem(60);
+  height: rem(60);
+  position: absolute;
+}
+.discList-con {
+  padding-left: rem(80);
+}
+.discList-con h2 {
+  margin-bottom: rem(10);
+  color: #fff;
+  font-size: rem(15);
+  padding-top: rem(6);
+}
+.discList-con p {
+  color: hsla(0, 0%, 100%, 0.3);
+  font-size: rem(14);
+}
+.loading{
+  position: fixed;
+  width: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+}
 </style>

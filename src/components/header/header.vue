@@ -28,12 +28,14 @@ export default {
   background: rgb(34, 34, 34);
   // line-height: rem(40);
   text-align: center;
-  position: relative;
+  position: fixed;
+  top: 0;
+  left: 0;
   padding-top: rem(5);
   box-sizing: border-box;
+  z-index: 100;
 }
 .header-con{
-  height: 100%;
   display: inline;
   margin: auto;
 }

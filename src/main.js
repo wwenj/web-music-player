@@ -6,8 +6,14 @@ import router from './router'
 import 'assets/js/amfe-flexible.js'
 // import 'assets/css/mixin.scss';
 import fastclick from 'fastclick'
+import VueLazyload from 'vue-lazyload'
 
 fastclick.attach(document.body) // 解决移动端事件300ms延时
+
+Vue.use(VueLazyload, {
+  error: require('./assets/img/error.jpg'),
+  loading: require('./assets/img/loading.gif')
+})
 
 Vue.config.productionTip = false
 
