@@ -3,7 +3,7 @@
     <div>
       <!-- 轮播 -->
       <div class="swiper-container">
-        <swiper class="swiper-wrapper" :options="swiperOption" ref="mySwiper">
+        <swiper v-if="banner.length" class="swiper-wrapper" :options="swiperOption" ref="mySwiper">
           <swiperSlide class="swiper-slide" v-for="(item,index) in banner" :key="index">
             <a :href="item.linkUrl">
               <img :src="item.picUrl" alt="">
@@ -14,7 +14,7 @@
       </div>
       <!-- 推荐歌单 -->
       <div class="gedanTitle" v-show="discList">热门歌单推荐</div>
-      <ul class="discList-ul">
+      <ul v-if="discList.length" class="discList-ul">
         <li class="discList-li" v-for="(item,index) in discList" :key="index">
           <img v-lazy="item.imgurl" alt="歌单" :title="item.creator.name">
           <div class="discList-con">

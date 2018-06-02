@@ -1,7 +1,8 @@
 <template>
   <!-- <div class="app1"> -->
-  <Scroll :data="singers" class="app1" ref="scrollView">
-      <ul>
+  <div class="app">
+    <Scroll :data="singers" class="app1" ref="scrollView">
+      <ul v-if="singers.length">
         <li class="li-box" v-for="(item1, index) in singers" :key="index" ref="listView">
           <h2 class="title">{{item1.title}}</h2>
           <ul>
@@ -12,12 +13,13 @@
           </ul>
         </li>
       </ul>
-      <div class="tab-right">
-        <ul>
-          <li v-for="(item, index) in singers" :key="index" @touchstart.stop="toTouchScroll(index)">{{ item.title }}</li>
-        </ul>
-      </div>
-  </Scroll>
+    </Scroll>
+    <div class="tab-right">
+      <ul>
+        <li v-for="(item, index) in singers" :key="index" @touchstart.stop="toTouchScroll(index)">{{ item.title }}</li>
+      </ul>
+    </div>
+  </div>
   <!-- </div> -->
 </template>
 
@@ -118,6 +120,9 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
 @import "assets/css/mixin.scss";
+.app{
+  position: relative;
+}
 .app1 {
   // padding-top: rem(88);
   // padding-bottom: rem(88);
