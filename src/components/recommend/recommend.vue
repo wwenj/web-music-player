@@ -1,50 +1,54 @@
 <template>
-  <div class="app">
-    <!-- 轮播 -->
-    <div class="swiper-container">
-      <swiper class="swiper-wrapper" :options="swiperOption" ref="mySwiper">
-        <swiperSlide class="swiper-slide" v-for="(item,index) in banner" :key="index">
-          <a :href="item.linkUrl">
-            <img :src="item.picUrl" alt="">
-          </a>
-        </swiperSlide>
-        <div class="swiper-pagination" slot="pagination"></div>
-      </swiper>
+  <Scroll :data="discList" class="app">
+    <div>
+      <!-- 轮播 -->
+      <div class="swiper-container">
+        <swiper class="swiper-wrapper" :options="swiperOption" ref="mySwiper">
+          <swiperSlide class="swiper-slide" v-for="(item,index) in banner" :key="index">
+            <a :href="item.linkUrl">
+              <img :src="item.picUrl" alt="">
+            </a>
+          </swiperSlide>
+          <div class="swiper-pagination" slot="pagination"></div>
+        </swiper>
+      </div>
+      <!-- 推荐歌单 -->
+      <div class="gedanTitle" v-show="discList">热门歌单推荐</div>
+      <ul class="discList-ul">
+        <li class="discList-li" v-for="(item,index) in discList" :key="index">
+          <img v-lazy="item.imgurl" alt="歌单" :title="item.creator.name">
+          <div class="discList-con">
+            <h2>{{item.creator.name}}</h2>
+            <p>{{item.dissname}}</p>
+          </div>
+        </li>
+      </ul>
     </div>
-    <!-- 推荐歌单 -->
-    <div class="gedanTitle" v-show="discList">热门歌单推荐</div>
-    <ul class="discList-ul">
-      <li class="discList-li" v-for="(item,index) in discList" :key="index">
-        <img v-lazy="item.imgurl" alt="歌单" :title="item.creator.name">
-        <div class="discList-con">
-          <h2>{{item.creator.name}}</h2>
-          <p>{{item.dissname}}</p>
-        </div>
-      </li>
-    </ul>
-    <div class="loading" v-show="!discList">
+    <div class="loading" v-show="discList.length === 0?1:0">
       <loading></loading>
     </div>
-  </div>
+  </Scroll>
 </template>
 
 <script>
+import Scroll from "base/scroll/scroll";
 import "swiper/dist/css/swiper.css";
 import { swiper, swiperSlide } from "vue-awesome-swiper";
 import { getRecommend, getDiscList } from "api/recommend.js";
 import { ERR_OK } from "api/config";
-import loading from 'base/loading/loading'
+import loading from "base/loading/loading";
 export default {
   name: "Recommend",
   components: {
     swiper,
     swiperSlide,
-    loading
+    loading,
+    Scroll
   },
   data() {
     return {
-      banner: "",
-      discList: "",
+      banner: [],
+      discList: [],
       swiperOption: {
         pagination: {
           el: ".swiper-pagination",
@@ -91,6 +95,13 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
 @import "assets/css/mixin.scss";
+.app {
+  width: 100vw;
+  height: 86vh;
+  overflow: hidden;
+  // padding-top: rem(88);
+  // box-sizing: border-box;
+}
 .swiper-container {
   width: 100%;
   height: rem(150);
@@ -137,10 +148,11 @@ export default {
   color: hsla(0, 0%, 100%, 0.3);
   font-size: rem(14);
 }
-.loading{
+.loading {
   position: fixed;
   width: 100%;
   top: 50%;
   transform: translateY(-50%);
+  // z-index: 200;
 }
 </style>

@@ -3,7 +3,7 @@
     <Header></Header>
     <Nav></Nav>
     <keep-alive>
-      <router-view class="con"></router-view>
+      <router-view></router-view>
     </keep-alive>
   </div>
 </template>
@@ -27,6 +27,13 @@ export default {
   min-width: 100vw;
   min-height: 100vh;
   background: rgb(34, 34, 34);
-  padding-top: rem(88);
+  // padding-top: rem(88);
+  // overflow: hidden;
+}
+html{
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: rgb(34, 34, 34);
 }
 </style>

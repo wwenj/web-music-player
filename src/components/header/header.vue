@@ -28,9 +28,10 @@ export default {
   background: rgb(34, 34, 34);
   // line-height: rem(40);
   text-align: center;
-  position: fixed;
-  top: 0;
-  left: 0;
+  // position: fixed;
+  position: relative;
+  // top: 0;
+  // left: 0;
   padding-top: rem(5);
   box-sizing: border-box;
   z-index: 100;
