@@ -5,6 +5,7 @@ import App from './App'
 import router from './router'
 import 'assets/js/amfe-flexible.js'
 // import 'assets/css/mixin.scss';
+import store from './store'
 import fastclick from 'fastclick'
 import VueLazyload from 'vue-lazyload'
 
@@ -21,6 +22,7 @@ Vue.config.productionTip = false
 new Vue({
   el: '#app',
   router,
+  store,
   components: {
     App
   },

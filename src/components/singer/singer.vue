@@ -1,36 +1,46 @@
 <template>
-  <!-- <div class="app1"> -->
   <div class="app">
-    <Scroll :data="singers" class="app1" ref="scrollView">
-      <ul v-if="singers.length">
+    <Scroll v-if="singers.length" :data="singers" class="scroll" :listenScroll="listenScroll" ref="scrollView" @scroll="scroll">
+      <ul>
         <li class="li-box" v-for="(item1, index) in singers" :key="index" ref="listView">
           <h2 class="title">{{item1.title}}</h2>
           <ul>
-            <li class="li-con" v-for="(item2, index) in item1.list" :key="index">
+            <li @click="toSingerDetail(item2)" class="li-con" v-for="(item2, index) in item1.list" :key="index">
               <img v-lazy="item2.img" alt="">
               <span class="name">{{item2.name}}</span>
             </li>
           </ul>
         </li>
       </ul>
+      <!-- <h2 id="fixed" class="title">A</h2> -->
     </Scroll>
     <div class="tab-right">
       <ul>
-        <li v-for="(item, index) in singers" :key="index" @touchstart.stop="toTouchScroll(index)">{{ item.title }}</li>
+        <li v-for="(item, index) in singers" :key="index" @touchstart.stop.prevent="toTouchScroll(index)">{{ item.title }}</li>
       </ul>
     </div>
+    <!-- 歌手详情子路由 -->
+    <transition name="fade">
+      <router-view></router-view>
+    </transition>
+    <!-- loading -->
+    <div class="loading" v-show="singers.length === 0?1:0">
+      <loading></loading>
+    </div>
   </div>
-  <!-- </div> -->
 </template>
 
 <script>
+import loading from "base/loading/loading";
 import Scroll from "base/scroll/scroll";
 import { getSingerList } from "api/singer";
 import { ERR_OK } from "api/config";
+import { mapMutations } from "vuex";
 export default {
   name: "Singer",
   components: {
-    Scroll
+    Scroll,
+    loading
   },
   data() {
     return {
@@ -40,6 +50,7 @@ export default {
   },
   created() {
     this._getSingerList();
+    this.listenScroll = true;
   },
   methods: {
     _getSingerList: function() {
@@ -68,6 +79,7 @@ export default {
           newList[item.Findex].list.push({
             // 如果已存在则直接向这组数据中push这个元素
             id: item.Fsinger_id,
+            mid: item.Fsinger_mid,
             name: item.Fsinger_name,
             img: `https://y.gtimg.cn/music/photo_new/T001R300x300M000${
               item.Fsinger_mid
@@ -84,6 +96,7 @@ export default {
             list: [
               {
                 id: item.Fsinger_id,
+                mid: item.Fsinger_mid,
                 name: item.Fsinger_name,
                 img: `https://y.gtimg.cn/music/photo_new/T001R300x300M000${
                   item.Fsinger_mid
@@ -108,11 +121,24 @@ export default {
       }
       newList2.sort(compare("title"));
       this.singers = newList2;
-      console.log(this.singers);
+      // console.log(this.singers);
     },
     toTouchScroll: function(index) {
+      // alert('5')
       this.$refs.scrollView.scrollToElement(this.$refs.listView[index], 0);
-    }
+    },
+    scroll: function(pos) {
+      // console.log(pos.y);
+    },
+    toSingerDetail: function(item) {
+      this.$router.push({
+        path: `/singer/${item.id}`
+      });
+      this.setSinger(item);
+    },
+    ...mapMutations({
+      setSinger: "SET_SINGER"
+    })
   }
 };
 </script>
@@ -120,14 +146,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
 @import "assets/css/mixin.scss";
-.app{
-  position: relative;
-}
-.app1 {
-  // padding-top: rem(88);
-  // padding-bottom: rem(88);
-  // margin-top: rem(50);
-  box-sizing: border-box;
+.scroll {
   position: relative;
   width: 100vw;
   height: 87vh;
@@ -135,9 +154,9 @@ export default {
 }
 .app {
   position: relative;
-  display: block;
-  width: 100%;
-  height: 100%;
+  // display: block;
+  // width: 100%;
+  // height: 100%;
   // overflow: hidden;
 }
 .li-box {
@@ -177,7 +196,7 @@ img {
 /* 侧面导航字母 */
 .tab-right {
   position: absolute;
-  z-index: 30;
+  z-index: 300;
   right: 0;
   top: 50%;
   transform: translateY(-50%);
@@ -193,5 +212,25 @@ img {
   text-align: center;
   color: hsla(0, 0%, 100%, 0.5);
   font-size: rem(12);
+}
+#fixed {
+  position: absolute;
+  top: rem(-1);
+  left: 0;
+}
+/* 子路由进去动画 */
+.fade-enter-active,
+.fade-leave-active {
+  transition: all 0.3s;
+}
+.fade-enter,
+.fade-leave-to {
+  transform: translate3d(100%, 0, 0);
+}
+.loading {
+  position: fixed;
+  width: 100%;
+  top: 50%;
+  transform: translateY(-50%);
 }
 </style>

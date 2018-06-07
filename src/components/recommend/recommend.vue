@@ -1,12 +1,12 @@
 <template>
-  <Scroll :data="discList" class="app">
+  <Scroll v-if="banner.length" :data="discList" class="app" ref="scroll">
     <div>
       <!-- 轮播 -->
       <div class="swiper-container">
         <swiper v-if="banner.length" class="swiper-wrapper" :options="swiperOption" ref="mySwiper">
           <swiperSlide class="swiper-slide" v-for="(item,index) in banner" :key="index">
             <a :href="item.linkUrl">
-              <img :src="item.picUrl" alt="">
+              <img @load="imgOnload" :src="item.picUrl" alt="">
             </a>
           </swiperSlide>
           <div class="swiper-pagination" slot="pagination"></div>
@@ -68,7 +68,7 @@ export default {
     }
   },
   mounted() {
-    this.swiper.slideTo(3, 1000, false);
+    // this.swiper.slideTo(3, 1000, false);
   },
   methods: {
     _getRecommend: function() {
@@ -87,6 +87,12 @@ export default {
           that.discList = res.data.list;
         }
       });
+    },
+    imgOnload() {
+      if (!this.checkloaded) {
+        this.checkloaded = true;
+        this.$refs.scroll.refresh();
+      }
     }
   }
 };
@@ -99,8 +105,6 @@ export default {
   width: 100vw;
   height: 86vh;
   overflow: hidden;
-  // padding-top: rem(88);
-  // box-sizing: border-box;
 }
 .swiper-container {
   width: 100%;
