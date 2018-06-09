@@ -1,21 +1,27 @@
 <template>
   <div class="app">
     <div class="bg-box" :style="bgStyle">
-      <div class="header">
-        <img src="./toBack.png" alt="返回" title="返回" @click="toBack">
-        <h1 v-html="title"></h1>
+      <div class="header" :style="bgStyle">
+        <div class="header-filter">
+          <img src="./toBack.png" alt="返回" title="返回" @click="toBack">
+          <h1 v-html="title"></h1>
+        </div>
       </div>
       <div class="filter" ref="filter"></div>
     </div>
-    <SongList :songs="songs"></SongList>
+    <Scroll :data="songs" class="scroll">
+      <SongList :songs="songs" :rank="false"></SongList>
+    </Scroll>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
 import SongList from "base/songList/songList";
+import Scroll from "base/scroll/scroll";
 export default {
   components: {
-    SongList
+    SongList,
+    Scroll
   },
   props: {
     bgImage: {
@@ -61,8 +67,10 @@ export default {
   color: #fff;
 }
 .header {
+  width: 100%;
+  background-size: 100% auto;
   position: relative;
-  z-index: 10;
+  z-index: 300;
 }
 .header img {
   width: rem(30);
@@ -80,7 +88,7 @@ export default {
 }
 .bg-box {
   width: 100%;
-  height: rem(262);
+  height: 39vh;
   background-size: 100% auto;
   position: relative;
 }
@@ -91,6 +99,15 @@ export default {
   width: 100%;
   height: 100%;
   background: rgba(7, 17, 27, 0.4);
-  // z-index: 5;
+}
+.scroll {
+  width: 100%;
+  height: 61vh;
+}
+.header-filter {
+  width: 100%;
+  height: 100%;
+  background: rgba(7, 17, 27, 0.4);
+  // background: red;
 }
 </style>

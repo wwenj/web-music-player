@@ -1,7 +1,6 @@
 <template>
   <div class="app">
     <musicList :title="title" :bg-image="bgImage" :songs="songs"></musicList>
-    <!-- loading -->
   </div>
 
 </template>
@@ -32,16 +31,16 @@ export default {
   },
   created() {
     this._getDetail();
-    console.log(this.singer);
+    // console.log(this.singer);
   },
   methods: {
     _getDetail() {
       var that = this;
-      // if (!this.singer.id) {
-      //   this.$router.push("/singer");
-      //   return;
-      // }
-      console.log(that.singer.id);
+      if (!this.singer.id) {
+        this.$router.push("/singer");
+        return;
+      }
+      // console.log(that.singer.id);
       getSingerDetail(that.singer.mid).then(res => {
         if (res.code === ERR_OK) {
           this.songs = this._normalizeSongs(res.data.list);

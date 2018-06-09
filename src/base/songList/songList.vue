@@ -63,14 +63,17 @@ export default {
   box-sizing: border-box;
   padding: rem(20) rem(30);
   position: relative;
+  background: rgb(34, 34, 34);
 }
 .rank {
   float: left;
+  margin-top: rem(20);
 }
 .item {
   width: 100%;
   box-sizing: border-box;
   height: rem(64);
+  overflow: hidden;
 }
 .text {
   display: inline-block;
@@ -98,32 +101,26 @@ export default {
   background-image: url("./third@3x.png");
 }
 .content {
-  width: 100%;
+  // width: 100%;
   color: #fff;
   font-size: rem(15);
   float: left;
+  max-width: rem(250);
 }
 .name {
-  width: 90%;
+  max-width: rem(250);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  margin-top: rem(10);
+  margin-top: rem(15);
 }
 .desc {
-  width: 90%;
+  max-width: rem(250);
   box-sizing: border-box;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   margin-top: rem(10);
   color: rgba(255, 255, 255, 0.3);
-}
-.loading {
-  position: fixed;
-  width: 100%;
-  top: 50%;
-  left: 0;
-  transform: translateY(-50%);
 }
 </style>
