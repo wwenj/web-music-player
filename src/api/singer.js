@@ -32,7 +32,7 @@ export function getSingerDetail(singerId) {
     begin: 0,
     num: 80,
     songstatus: 1,
-    singermid: singerId
+    singermid: singerId // 确定请求歌手详情的参数
   })
 
   return jsonp(url, data, options)

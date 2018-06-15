@@ -2,7 +2,7 @@
   <div class="header">
     <div class="header-con">
       <img src="./logo.png" alt="logo">
-      <span class="title">Listen You Heart</span>
+      <span class="title">Listen World</span>
     </div>
     <span class="icon-mine">
       <img src="./icon-mine.png" alt="">

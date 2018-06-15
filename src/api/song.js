@@ -4,15 +4,43 @@ import {
 import axios from 'axios'
 
 export function getLyric(mid) {
-  const url = '/api/lyric'
+  const url = '/lyric'
 
   const data = Object.assign({}, commonParams, {
     songmid: mid,
+    // songmid: "000QCwge3B6Ad1",
     platform: 'yqq',
     hostUin: 0,
     needNewCode: 0,
     categoryId: 10000000,
     pcachetime: +new Date(),
+    format: 'json'
+  })
+
+  return axios.get(url, {
+    params: data
+  }).then((res) => {
+    return Promise.resolve(res.data)
+  })
+};
+
+/* 获取播放源连接密钥 */
+export function getVkey(songmid) {
+  const url = '/vkey'
+
+  const data = Object.assign({}, commonParams, {
+    // songmid: mid,
+    songmid: songmid,
+    filename: `C400${songmid}.m4a`,
+    guid: "1472133172",
+    uin: 0,
+    platform: 'yqq',
+    needNewCode: 0,
+    cid: "205361747",
+    // hostUin: 0,
+    // needNewCode: 0,
+    // categoryId: 10000000,
+    // pcachetime: +new Date(),
     format: 'json'
   })
 

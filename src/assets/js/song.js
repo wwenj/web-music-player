@@ -21,9 +21,9 @@ export default class Song {
   }) {
     this.id = id
     this.mid = mid
-    this.singer = singer
-    this.name = name
-    this.album = album
+    this.singer = singer //歌手
+    this.name = name //歌名
+    this.album = album // 专辑
     this.duration = duration
     this.image = image
     this.url = url
@@ -56,7 +56,8 @@ export function createSong(musicData) {
     album: musicData.albumname,
     duration: musicData.interval,
     image: `https://y.gtimg.cn/music/photo_new/T002R300x300M000${musicData.albummid}.jpg?max_age=2592000`,
-    url: `http://ws.stream.qqmusic.qq.com/${musicData.songid}.m4a?fromtag=46`
+    // url: `http://ws.stream.qqmusic.qq.com/${musicData.songid}.m4a?fromtag=46`
+    url: `http://dl.stream.qqmusic.qq.com/C400${musicData.songmid}.m4a?vkey=&guid=1472133172&uin=0&fromtag=66`
   })
 }
 
@@ -69,4 +70,9 @@ function filterSinger(singer) {
     ret.push(s.name)
   })
   return ret.join('/')
+}
+
+export function songUrl(vkey, mid) {
+  var url = `http://dl.stream.qqmusic.qq.com/C400${mid}.m4a?vkey=${vkey}&guid=1472133172&uin=0&fromtag=66`
+  return url
 }

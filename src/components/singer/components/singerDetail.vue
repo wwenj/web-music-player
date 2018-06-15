@@ -31,7 +31,6 @@ export default {
   },
   created() {
     this._getDetail();
-    // console.log(this.singer);
   },
   methods: {
     _getDetail() {
@@ -40,9 +39,10 @@ export default {
         this.$router.push("/singer");
         return;
       }
-      // console.log(that.singer.id);
+      // 使用singer.mid作为拼接url的请求路径
       getSingerDetail(that.singer.mid).then(res => {
         if (res.code === ERR_OK) {
+          // 调用_normalizeSongs进行数据的封装处理
           this.songs = this._normalizeSongs(res.data.list);
           // console.log(this.songs);
         }

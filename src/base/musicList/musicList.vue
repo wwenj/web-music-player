@@ -10,7 +10,7 @@
       <div class="filter" ref="filter"></div>
     </div>
     <Scroll :data="songs" class="scroll">
-      <SongList :songs="songs" :rank="false"></SongList>
+      <SongList @select="selectItem" :songs="songs" :rank="false"></SongList>
     </Scroll>
   </div>
 </template>
@@ -18,6 +18,9 @@
 <script type="text/ecmascript-6">
 import SongList from "base/songList/songList";
 import Scroll from "base/scroll/scroll";
+import { mapActions } from "vuex";
+import { getLyric, getVkey } from "api/song";
+import { ERR_OK } from "api/config";
 export default {
   components: {
     SongList,
@@ -41,10 +44,49 @@ export default {
       default: false
     }
   },
+  data() {
+    return {
+      vkey: "888",
+      item: "",
+      index: ""
+    };
+  },
   methods: {
     toBack: function() {
       this.$router.push("/singer");
-    }
+    },
+    _getLyric() {
+      var that = this;
+      // 传入当前点击的mid
+      var mid = this.songs[this.index].mid;
+      getLyric(that.songs.songmid).then(res => {
+        if (res.code === ERR_OK) {
+          // console.log(res.lyric);
+        }
+      });
+      getVkey(mid).then(res => {
+        if (res.code === ERR_OK) {
+          that.vkey = res.data.items[0].vkey;
+          that.addMapActions(that.item, that.index);
+        } else {
+          console.log("musicList请求错误");
+        }
+      });
+    },
+    selectItem(item, index) {
+      this.index = index;
+      this.item = item;
+      this._getLyric();
+    },
+    addMapActions(item, index) {
+      var that = this;
+      this.selectPlay({
+        list: that.songs,
+        index: index,
+        vkey: that.vkey
+      });
+    },
+    ...mapActions(["selectPlay"])
   },
   computed: {
     bgStyle() {
@@ -108,6 +150,6 @@ export default {
   width: 100%;
   height: 100%;
   background: rgba(7, 17, 27, 0.4);
-  // background: red;
+  // border-bottom:1px solid rgba(7, 17, 27, 0.4);
 }
 </style>
