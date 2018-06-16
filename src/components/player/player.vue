@@ -13,30 +13,34 @@
         <h1 class="title-singer" v-html="currentSong.singer"></h1>
         <!-- 旋转大头像 -->
         <div class="middle">
-          <img :src="currentSong.image" alt="">
+          <img :class="playing? 'playSrart' : 'playStorp'" :src="currentSong.image" alt="">
         </div>
         <!-- 控制按钮栏 -->
         <div class="bottom-button-box">
           <span><img src="./btnImg/sequence.png" alt=""></span>
-          <span><img src="./btnImg/prve.png" alt=""></span>
-          <span><img id="playButton" src="./btnImg/playButton.png" alt=""></span>
-          <span><img src="./btnImg/next.png" alt=""></span>
+          <span @click="prev"><img src="./btnImg/prve.png" alt=""></span>
+          <span @click="togglePlaying">
+            <img v-if="playing" id="playButton" src="./playStrop.png" alt="">
+            <img v-if="!playing" id="playButton" src="./playButton.png" alt="">
+          </span>
+          <span @click="next"><img src="./btnImg/next.png" alt=""></span>
           <span><img src="./btnImg/collect.png" alt=""></span>
         </div>
-        <audio ref="audio" :src="songUrlData"></audio>
+        <audio ref="audio"></audio>
       </div>
     </transition>
     <!-- 收回的迷你播放器 -->
     <div class="mini-player" v-show="!fullScreen" @click="toUp">
       <div class="mini-player-con">
-        <img :src="currentSong.image" alt="">
+        <img :class="playing? 'playSrart' : 'playStorp'" :src="currentSong.image" alt="">
         <p>
           <span class="mini-title" v-html="currentSong.name"></span>
           <span class="mini-name" v-html="currentSong.singer"></span>
         </p>
         <div class="playButton-box">
-          <span class="playButton">
-            <img src="./playButton.png" alt="播放按钮" title="播放">
+          <span @click.stop="togglePlaying" class="playButton">
+            <img v-if="playing" src="./playStrop.png" alt="">
+            <img v-if="!playing" src="./playButton.png" alt="">
           </span>
           <span class="playList">
             <img src="./playList.png" alt="播放按钮" title="播放">
@@ -49,9 +53,18 @@
 <script>
 import { mapGetters, mapMutations } from "vuex";
 import { songUrl } from "assets/js/song";
+import { getVkey } from "api/song";
+import { ERR_OK } from "api/config";
 export default {
   computed: {
-    ...mapGetters(["fullScreen", "playlist", "currentSong", "vkey"])
+    ...mapGetters([
+      "fullScreen",
+      "playlist",
+      "currentSong",
+      "vkey",
+      "playing",
+      "currentIndex"
+    ])
   },
   data() {
     return {
@@ -60,33 +73,80 @@ export default {
     };
   },
   mounted() {
-    // console.log(fullScreen, currentSong.mid);
-    // this._getLyric();
-    this._songUrl();
+    // this._songUrl();
   },
   methods: {
-    _songUrl() {
-      // var that = this;
-      // this.vkeyData = vkey
-      // this.songUrlData = songUrl(this.vkey);
-      // console.log(vkeyData);
+    /* 播放按钮点击 */
+    togglePlaying() {
+      this.setPlayingState(!this.playing);
     },
     toDown() {
       this.setFullScreen(false);
-      // console.log(this.currentSong);
     },
     toUp() {
       this.setFullScreen(true);
     },
+    /* 上一曲，下一曲 */
+    next() {
+      let index = this.currentIndex + 1;
+      if (index === this.playlist.length) {
+        index = 0;
+      }
+      this.setCurrentIndex(index);
+      this.setPlayingState("true"); // 点击下一曲后自动播放
+    },
+    prev() {
+      let index = this.currentIndex - 1;
+      if (index === -1) {
+        index = this.playlist.length - 1;
+      }
+      this.setCurrentIndex(index);
+      this.setPlayingState("false");
+    },
+    /* 重新请求key */
+    _getVkey(mid) {
+      var that = this;
+      getVkey(mid).then(res => {
+        if (res.code === ERR_OK) {
+          let vkey = res.data.items[0].vkey;
+          that.setVkey(vkey); // 请求到的key添加到vuex
+        } else {
+          console.log("player组件 vkey请求错误");
+        }
+      });
+    },
+    /* 播放歌曲 */
+    songPlay() {
+      this.$refs.audio.src = this.songUrlData;
+      this.$refs.audio.crossOrigin = this.anonymous;
+      this.$refs.audio.play();
+    },
     ...mapMutations({
-      setFullScreen: "SET_FULL_SCREEN"
+      setFullScreen: "SET_FULL_SCREEN", // 设置播放页显示
+      setPlayingState: "SET_PLAYING_STATE", // 设置播放状态
+      setCurrentIndex: "SET_CURRENT_INDEX", // 设置索引，引起当前播放歌曲变化
+      setVkey: "SET_VKEY"
     })
   },
   watch: {
     vkey: function(val, oldVal) {
       this.songUrlData = songUrl(val, this.currentSong.mid);
-      console.log(this.songUrlData)
+      console.log(this.songUrlData);
+      this.songPlay();
       // console.log(this.currentSong.mid)
+    },
+    // 检测当前播放歌曲变化
+    currentSong() {
+      this.$nextTick(() => {
+        this._getVkey(this.currentSong.mid);
+      });
+    },
+    // 检测播放状态
+    playing(val) {
+      this.$nextTick(() => {
+        const audio = this.$refs.audio;
+        val ? audio.play() : audio.pause();
+      });
     }
   }
 };
@@ -266,5 +326,21 @@ export default {
   opacity: 0;
   top: 100%;
   left: -150%;
+}
+/* 唱片旋转 */
+@keyframes rotate {
+  0% {
+    transform: rotate(0);
+  }
+  0% {
+    transform: rotate(360deg);
+  }
+}
+.playSrart {
+  animation: rotate 20s linear infinite;
+}
+.playStorp {
+  animation: rotate 20s linear infinite;
+  -webkit-animation-play-state: paused;
 }
 </style>

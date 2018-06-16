@@ -29,7 +29,6 @@ export function getVkey(songmid) {
   const url = '/vkey'
 
   const data = Object.assign({}, commonParams, {
-    // songmid: mid,
     songmid: songmid,
     filename: `C400${songmid}.m4a`,
     guid: "1472133172",
@@ -37,10 +36,6 @@ export function getVkey(songmid) {
     platform: 'yqq',
     needNewCode: 0,
     cid: "205361747",
-    // hostUin: 0,
-    // needNewCode: 0,
-    // categoryId: 10000000,
-    // pcachetime: +new Date(),
     format: 'json'
   })
 
