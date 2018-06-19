@@ -61,7 +61,7 @@ export default {
 .song-list {
   width: 100%;
   box-sizing: border-box;
-  padding: rem(20) rem(30);
+  padding: rem(20) rem(30) rem(55) rem(30);
   position: relative;
   background: rgb(34, 34, 34);
 }

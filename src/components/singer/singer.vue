@@ -1,7 +1,7 @@
 <template>
   <div class="app">
     <Scroll v-if="singers.length" :data="singers" class="scroll" :listenScroll="listenScroll" ref="scrollView" @scroll="scroll">
-      <ul>
+      <ul style="padding-bottom:25px;">
         <li class="li-box" v-for="(item1, index) in singers" :key="index" ref="listView">
           <h2 class="title">{{item1.title}}</h2>
           <ul>

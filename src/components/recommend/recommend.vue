@@ -37,6 +37,7 @@ import { swiper, swiperSlide } from "vue-awesome-swiper";
 import { getRecommend, getDiscList } from "api/recommend.js";
 import { ERR_OK } from "api/config";
 import loading from "base/loading/loading";
+// import { mapGetters } from "vuex";
 export default {
   name: "Recommend",
   components: {
@@ -66,6 +67,7 @@ export default {
     swiper() {
       return this.$refs.mySwiper.swiper;
     }
+    // ...mapGetters(["playlist"])
   },
   mounted() {
     // this.swiper.slideTo(3, 1000, false);
@@ -126,6 +128,7 @@ export default {
 }
 .discList-ul {
   width: 100%;
+  padding-bottom: rem(30);
 }
 .discList-li {
   width: 100%;

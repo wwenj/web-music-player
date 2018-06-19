@@ -15,9 +15,21 @@
         <div class="middle">
           <img :class="playing? 'playSrart' : 'playStorp'" :src="currentSong.image" alt="">
         </div>
+        <!-- 播放进度条 -->
+        <div class="time-box">
+          <div class="time">
+            <span class="time-l">{{ format(currentTime) }}</span>
+            <progressBar style="overflow:hidden" :percent="percent" @percentChange="percentChange"></progressBar>
+            <span class="time-r">{{ format(currentSong.duration) }}</span>
+          </div>
+        </div>
         <!-- 控制按钮栏 -->
         <div class="bottom-button-box">
-          <span><img src="./btnImg/sequence.png" alt=""></span>
+          <span @click="changeMode">
+            <img v-if="mode === 2" src="./btnImg/random.png" alt="">
+            <img v-if="mode === 0" src="./btnImg/sequence.png" alt="">
+            <img v-if="mode === 1" src="./btnImg/loop.png" alt="">
+          </span>
           <span @click="prev"><img src="./btnImg/prve.png" alt=""></span>
           <span @click="togglePlaying">
             <img v-if="playing" id="playButton" src="./playStrop.png" alt="">
@@ -26,7 +38,8 @@
           <span @click="next"><img src="./btnImg/next.png" alt=""></span>
           <span><img src="./btnImg/collect.png" alt=""></span>
         </div>
-        <audio ref="audio"></audio>
+        <!-- 音乐播放器 -->
+        <audio ref="audio" @canplay="audioReady" @error="audioError" @timeupdate="timeUpdate" @ended="songEnd"></audio>
       </div>
     </transition>
     <!-- 收回的迷你播放器 -->
@@ -53,9 +66,15 @@
 <script>
 import { mapGetters, mapMutations } from "vuex";
 import { songUrl } from "assets/js/song";
+import { shuffle } from "assets/js/util";
 import { getVkey } from "api/song";
 import { ERR_OK } from "api/config";
+import progressBar from "./components/progress-bar";
+import { playMode } from "assets/js/config";
 export default {
+  components: {
+    progressBar
+  },
   computed: {
     ...mapGetters([
       "fullScreen",
@@ -63,13 +82,20 @@ export default {
       "currentSong",
       "vkey",
       "playing",
-      "currentIndex"
-    ])
+      "currentIndex",
+      "mode",
+      "sequenceList"
+    ]),
+    percent() {
+      return this.currentTime / this.currentSong.duration;
+    }
   },
   data() {
     return {
       songUrlData: "",
-      vkeyData: ""
+      vkeyData: "",
+      songReadey: false, // 能否跳转下一曲
+      currentTime: ""
     };
   },
   mounted() {
@@ -88,20 +114,87 @@ export default {
     },
     /* 上一曲，下一曲 */
     next() {
+      if (!this.songReadey) {
+        return;
+      }
       let index = this.currentIndex + 1;
       if (index === this.playlist.length) {
         index = 0;
       }
       this.setCurrentIndex(index);
       this.setPlayingState("true"); // 点击下一曲后自动播放
+      this.songReadey = false;
     },
     prev() {
+      if (!this.songReadey) {
+        return;
+      }
       let index = this.currentIndex - 1;
       if (index === -1) {
         index = this.playlist.length - 1;
       }
       this.setCurrentIndex(index);
       this.setPlayingState("false");
+      this.songReadey = false;
+    },
+    /* 歌曲加载成功 */
+    audioReady() {
+      this.songReadey = true; // 当前歌曲还未加载完成时禁止跳转其他歌曲
+    },
+    audioError() {
+      console.log("当前歌曲加载失败，请尝试其他歌曲");
+      this.songReadey = true; // 歌曲加载失败是不会阻塞其他歌曲播放
+    },
+    /* 音频播放时间更新 */
+    timeUpdate(e) {
+      this.currentTime = e.target.currentTime;
+      // console.log(this.currentTime)
+    },
+    /* 歌曲进度条触摸后改变歌曲播放进度 */
+    percentChange(precent) {
+      this.$refs.audio.currentTime = this.currentSong.duration * precent;
+    },
+    /* 封装歌曲当前播放时间 */
+    format(interval) {
+      interval = interval | 0;
+      var min = (interval / 60) | 0;
+      var sec = interval % 60;
+      if (sec.toString().length === 1) {
+        sec = `0${sec}`;
+      }
+      return `${min}:${sec}`;
+    },
+    /* 改变播放顺序 */
+    changeMode() {
+      const mode = (this.mode + 1) % 3; // 取余
+      this.setPlayMode(mode);
+      let list = null;
+      if (mode === playMode.random) {
+        list = shuffle(this.sequenceList);
+      } else {
+        list = this.sequenceList;
+      }
+      this.resetCurrentIndex(list);
+      this.setPlayList(list);
+    },
+    resetCurrentIndex(list) {
+      let index = list.findIndex(item => {
+        return item.id === this.currentSong.id;
+      });
+      this.setCurrentIndex(index);
+    },
+    /* 歌曲播放完毕 */
+    songEnd(){
+      if(this.mode === playMode.loop){
+        this.songLoop();
+      }else{
+        this.next()
+      }
+    },
+    /* 单曲循环播放调会播放初始 */
+    songLoop(){
+      this.$refs.audio.currentTime = 0;
+      this.$refs.audio.play();
     },
     /* 重新请求key */
     _getVkey(mid) {
@@ -125,7 +218,9 @@ export default {
       setFullScreen: "SET_FULL_SCREEN", // 设置播放页显示
       setPlayingState: "SET_PLAYING_STATE", // 设置播放状态
       setCurrentIndex: "SET_CURRENT_INDEX", // 设置索引，引起当前播放歌曲变化
-      setVkey: "SET_VKEY"
+      setVkey: "SET_VKEY",
+      setPlayMode: "SET_PLAY_MODE",
+      setPlayList: "SET_PLAYLIST"
     })
   },
   watch: {
@@ -136,7 +231,11 @@ export default {
       // console.log(this.currentSong.mid)
     },
     // 检测当前播放歌曲变化
-    currentSong() {
+    currentSong(newSong, oldSong) {
+      if (newSong === oldSong) {
+        // 当currentSong播放列表因为点击播放方式改变时，不做操作
+        return;
+      }
       this.$nextTick(() => {
         this._getVkey(this.currentSong.mid);
       });
@@ -342,5 +441,34 @@ export default {
 .playStorp {
   animation: rotate 20s linear infinite;
   -webkit-animation-play-state: paused;
+}
+/* 播放进度条 */
+.time-box {
+  width: 100%;
+  height: rem(30);
+  margin: auto;
+  position: fixed;
+  bottom: rem(90);
+  padding: rem(10) 0;
+}
+.time {
+  width: rem(300);
+  height: rem(30);
+  margin: auto;
+  display: flex;
+  justify-content: space-between;
+}
+.time span {
+  display: inline-block;
+  width: rem(30);
+  height: rem(30);
+  line-height: rem(30);
+  font-size: rem(12);
+}
+.time-l {
+  padding-right: rem(7);
+}
+.time-r {
+  padding-left: rem(7);
 }
 </style>
