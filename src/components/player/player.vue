@@ -13,7 +13,19 @@
         <h1 class="title-singer" v-html="currentSong.singer"></h1>
         <!-- 旋转大头像 -->
         <div class="middle">
-          <img :class="playing? 'playSrart' : 'playStorp'" :src="currentSong.image" alt="">
+          <!-- <img :class="playing? 'playSrart' : 'playStorp'" :src="currentSong.image" alt=""> -->
+          <scroll class="middle-r" ref="lyricList" :data="currentLyric && currentLyric.lines">
+            <div class="lyric-wrapper">
+              <div v-if="currentLyric">
+                <p ref="lyricLine" class="text" :class="{'current': currentLineNum ===index}" v-for="(line, index) in currentLyric.lines" :key="index">{{line.txt}}</p>
+              </div>
+            </div>
+          </scroll>
+        </div>
+        <!-- 歌词旋转图像轮播 -->
+        <div class="dot-wrapper">
+          <span class="dot" :class="{'active':currentShow==='cd'}"></span>
+          <span class="dot" :class="{'active':currentShow==='lyric'}"></span>
         </div>
         <!-- 播放进度条 -->
         <div class="time-box">
@@ -67,13 +79,18 @@
 import { mapGetters, mapMutations } from "vuex";
 import { songUrl } from "assets/js/song";
 import { shuffle } from "assets/js/util";
-import { getVkey } from "api/song";
+import { getVkey, getLyric } from "api/song";
 import { ERR_OK } from "api/config";
 import progressBar from "./components/progress-bar";
 import { playMode } from "assets/js/config";
+import { Base64 } from "js-base64";
+import Lyric from "lyric-parser";
+import Scroll from "base/scroll/scroll";
+
 export default {
   components: {
-    progressBar
+    progressBar,
+    Scroll
   },
   computed: {
     ...mapGetters([
@@ -95,8 +112,14 @@ export default {
       songUrlData: "",
       vkeyData: "",
       songReadey: false, // 能否跳转下一曲
-      currentTime: ""
+      currentTime: "",
+      currentLyric: null, // 封装后的歌词对象
+      currentShow: "cd", // 轮播图底部导航
+      currentLineNum: 0
     };
+  },
+  created() {
+    this.touch = {};
   },
   mounted() {
     // this._songUrl();
@@ -184,15 +207,15 @@ export default {
       this.setCurrentIndex(index);
     },
     /* 歌曲播放完毕 */
-    songEnd(){
-      if(this.mode === playMode.loop){
+    songEnd() {
+      if (this.mode === playMode.loop) {
         this.songLoop();
-      }else{
-        this.next()
+      } else {
+        this.next();
       }
     },
     /* 单曲循环播放调会播放初始 */
-    songLoop(){
+    songLoop() {
       this.$refs.audio.currentTime = 0;
       this.$refs.audio.play();
     },
@@ -207,6 +230,30 @@ export default {
           console.log("player组件 vkey请求错误");
         }
       });
+      /* 获取歌词 */
+      getLyric(mid).then(res => {
+        if (res.code === ERR_OK) {
+          let lyric = Base64.decode(res.lyric);
+          this.currentLyric = new Lyric(lyric, this.handleLyric);
+          if (this.playing) {
+            // 如果此时正在播放则歌词也开始播放
+            this.currentLyric.play();
+          }
+          console.log(this.currentLyric);
+        } else {
+          console.log("player组件 Lyric请求错误");
+        }
+      });
+    },
+    handleLyric({ lineNum, txt }) {
+      this.currentLineNum = lineNum;
+      if (lineNum > 5) {
+        let lineEl = this.$refs.lyricLine[lineNum - 5];
+        this.$refs.lyricList.scrollToElement(lineEl, 1000);
+      } else {
+        this.$refs.lyricList.scrollTo(0, 0, 1000);
+      }
+      this.playingLyric = txt;
     },
     /* 播放歌曲 */
     songPlay() {
@@ -214,6 +261,75 @@ export default {
       this.$refs.audio.crossOrigin = this.anonymous;
       this.$refs.audio.play();
     },
+    /* 旋转头像歌词左右滑动 */
+    // middleTouchStart(e) {
+    //   this.touch.initiated = true;
+    //   // 用来判断是否是一次移动
+    //   this.touch.moved = false;
+    //   const touch = e.touches[0];
+    //   this.touch.startX = touch.pageX;
+    //   this.touch.startY = touch.pageY;
+    // },
+    // middleTouchMove(e) {
+    //   if (!this.touch.initiated) {
+    //     return;
+    //   }
+    //   const touch = e.touches[0];
+    //   const deltaX = touch.pageX - this.touch.startX;
+    //   const deltaY = touch.pageY - this.touch.startY;
+    //   if (Math.abs(deltaY) > Math.abs(deltaX)) { // 上下滑动大于左右滑动判定为上下滑动
+    //     return;
+    //   }
+    //   if (!this.touch.moved) {
+    //     this.touch.moved = true;
+    //   }
+    //   const left = this.currentShow === "cd" ? 0 : -window.innerWidth;
+    //   const offsetWidth = Math.min(
+    //     0,
+    //     Math.max(-window.innerWidth, left + deltaX)
+    //   );
+    //   this.touch.percent = Math.abs(offsetWidth / window.innerWidth);
+    //   this.$refs.lyricList.$el.style[
+    //     transform
+    //   ] = `translate3d(${offsetWidth}px,0,0)`;
+    //   this.$refs.lyricList.$el.style[transitionDuration] = 0;
+    //   this.$refs.middleL.style.opacity = 1 - this.touch.percent;
+    //   this.$refs.middleL.style[transitionDuration] = 0;
+    // },
+    // middleTouchEnd() {
+    //   if (!this.touch.moved) {
+    //     return;
+    //   }
+    //   let offsetWidth;
+    //   let opacity;
+    //   if (this.currentShow === "cd") {
+    //     if (this.touch.percent > 0.1) {
+    //       offsetWidth = -window.innerWidth;
+    //       opacity = 0;
+    //       this.currentShow = "lyric";
+    //     } else {
+    //       offsetWidth = 0;
+    //       opacity = 1;
+    //     }
+    //   } else {
+    //     if (this.touch.percent < 0.9) {
+    //       offsetWidth = 0;
+    //       this.currentShow = "cd";
+    //       opacity = 1;
+    //     } else {
+    //       offsetWidth = -window.innerWidth;
+    //       opacity = 0;
+    //     }
+    //   }
+    //   const time = 300;
+    //   this.$refs.lyricList.$el.style[
+    //     transform
+    //   ] = `translate3d(${offsetWidth}px,0,0)`;
+    //   this.$refs.lyricList.$el.style[transitionDuration] = `${time}ms`;
+    //   this.$refs.middleL.style.opacity = opacity;
+    //   this.$refs.middleL.style[transitionDuration] = `${time}ms`;
+    //   this.touch.initiated = false;
+    // },
     ...mapMutations({
       setFullScreen: "SET_FULL_SCREEN", // 设置播放页显示
       setPlayingState: "SET_PLAYING_STATE", // 设置播放状态
@@ -381,6 +497,7 @@ export default {
   width: 100%;
   height: rem(420);
   text-align: center;
+  overflow: hidden;
 }
 .middle img {
   width: rem(300);
@@ -470,5 +587,44 @@ export default {
 }
 .time-r {
   padding-left: rem(7);
+}
+/* 底部轮播导航 */
+.dot-wrapper {
+  width: 100%;
+  height: rem(8);
+  position: fixed;
+  bottom: rem(150);
+  text-align: center;
+}
+.dot {
+  display: inline-block;
+  width: rem(8);
+  height: rem(8);
+  border-radius: rem(8);
+  background: hsla(0, 0%, 100%, 0.5);
+  // margin: 0 rem(4);
+}
+.active {
+  width: rem(20);
+  background: hsla(0, 0%, 100%, 0.8);
+}
+/* 歌词部分 */
+.lyric-wrapper {
+  width: 80%;
+  margin: 0 auto;
+  overflow: hidden;
+  text-align: center;
+}
+.text {
+  line-height: 32px;
+  color: hsla(0, 0%, 100%, 0.5);
+  font-size: rem(14);
+}
+.current {
+  color: #fff;
+}
+.middle-r {
+  width: 100%;
+  height: rem(420);
 }
 </style>

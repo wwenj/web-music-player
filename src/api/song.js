@@ -8,7 +8,6 @@ export function getLyric(mid) {
 
   const data = Object.assign({}, commonParams, {
     songmid: mid,
-    // songmid: "000QCwge3B6Ad1",
     platform: 'yqq',
     hostUin: 0,
     needNewCode: 0,

@@ -46,7 +46,7 @@ export default {
   },
   data() {
     return {
-      vkey: "888",
+      vkey: "",
       item: "",
       index: ""
     };
