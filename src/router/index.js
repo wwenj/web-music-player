@@ -13,7 +13,11 @@ export default new Router({
   {
     path: '/recommend',
     name: 'Recommend',
-    component: (resolve) => require(['@/components/recommend/recommend'], resolve)
+    component: (resolve) => require(['@/components/recommend/recommend'], resolve),
+    children: [{
+      path: ':id',
+      component: (resolve) => require(['@/components/recommend/components/recomDetail'], resolve)
+    }]
   },
   {
     path: '/singer',
@@ -27,7 +31,11 @@ export default new Router({
   {
     path: '/rank',
     name: 'Rank',
-    component: (resolve) => require(['@/components/rank/rank'], resolve)
+    component: (resolve) => require(['@/components/rank/rank'], resolve),
+    children: [{
+      path: ':id',
+      component: (resolve) => require(['@/components/rank/components/rankDetail'], resolve)
+    }]
   },
   {
     path: '/search',

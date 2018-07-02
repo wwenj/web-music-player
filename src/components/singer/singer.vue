@@ -1,7 +1,7 @@
 <template>
   <div class="app">
     <Scroll v-if="singers.length" :data="singers" class="scroll" :listenScroll="listenScroll" ref="scrollView" @scroll="scroll">
-      <ul style="padding-bottom:25px;">
+      <ul ref="singerUl">
         <li class="li-box" v-for="(item1, index) in singers" :key="index" ref="listView">
           <h2 class="title">{{item1.title}}</h2>
           <ul>
@@ -35,9 +35,11 @@ import loading from "base/loading/loading";
 import Scroll from "base/scroll/scroll";
 import { getSingerList } from "api/singer";
 import { ERR_OK } from "api/config";
-import { mapMutations } from "vuex";
+import { mapMutations, mapGetters } from "vuex";
+import { playlistMixin } from "assets/js/mixin";
 export default {
   name: "Singer",
+  mixins: [playlistMixin],
   components: {
     Scroll,
     loading
@@ -48,11 +50,23 @@ export default {
       pulldown: true
     };
   },
+  computed: {
+    ...mapGetters(["playlist"])
+  },
   created() {
     this._getSingerList();
     this.listenScroll = true;
   },
   methods: {
+    handlePlaylist(playlist) {
+      if (this.$refs.singerUl) {
+        console.log("singer更新")
+        const bottom = playlist.length > 0 ? "60px" : "";
+
+        this.$refs.singerUl.style.paddingBottom = bottom;
+        this.$refs.scrollView.refresh();
+      }
+    },
     _getSingerList: function() {
       var that = this;
       getSingerList().then(res => {

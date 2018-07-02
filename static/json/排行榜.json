@@ -1,0 +1,217 @@
+{
+  "code": 0,
+  "subcode": 0,
+  "message": "",
+  "default": 0,
+  "data": {
+    "topList": [{
+      "id": 4,
+      "listenCount": 19700000,
+      "picUrl": "http://y.gtimg.cn/music/common/upload/iphone_order_channel/toplist_4_300_213978475.jpg",
+      "songList": [{
+        "singername": "张思源",
+        "songname": "给陌生的你听"
+      }, {
+        "singername": "薛之谦",
+        "songname": "怪咖"
+      }, {
+        "singername": "胡66",
+        "songname": "浪人琵琶"
+      }],
+      "topTitle": "巅峰榜·流行指数",
+      "type": 0
+    }, {
+      "id": 26,
+      "listenCount": 19700000,
+      "picUrl": "http://y.gtimg.cn/music/common/upload/iphone_order_channel/toplist_26_300_109005773.jpg",
+      "songList": [{
+        "singername": "Olly Murs",
+        "songname": "That Girl"
+      }, {
+        "singername": "BLACKPINK",
+        "songname": "DDU-DU DDU-DU (뚜두뚜두)"
+      }, {
+        "singername": "曾惜",
+        "songname": "讲真的"
+      }],
+      "topTitle": "巅峰榜·热歌",
+      "type": 0
+    }, {
+      "id": 27,
+      "listenCount": 15800000,
+      "picUrl": "http://y.gtimg.cn/music/common/upload/iphone_order_channel/toplist_27_300_214182478.jpg",
+      "songList": [{
+        "singername": "薛之谦",
+        "songname": "怪咖"
+      }, {
+        "singername": "尤长靖",
+        "songname": "傲红尘"
+      }, {
+        "singername": "陈奕迅",
+        "songname": "渐渐"
+      }],
+      "topTitle": "巅峰榜·新歌",
+      "type": 0
+    }, {
+      "id": 28,
+      "listenCount": 19100000,
+      "picUrl": "http://y.gtimg.cn/music/common/upload/iphone_order_channel/toplist_28_300_214063280.jpg",
+      "songList": [{
+        "singername": "莉哥",
+        "songname": "让我做你的眼睛"
+      }, {
+        "singername": "摩登兄弟",
+        "songname": "兄弟情"
+      }, {
+        "singername": "卢焱",
+        "songname": "一生独一"
+      }],
+      "topTitle": "巅峰榜·网络歌曲",
+      "type": 0
+    }, {
+      "id": 5,
+      "listenCount": 7369000,
+      "picUrl": "http://y.gtimg.cn/music/common/upload/iphone_order_channel/toplist_5_300_214182478.jpg",
+      "songList": [{
+        "singername": "薛之谦",
+        "songname": "怪咖"
+      }, {
+        "singername": "张杰",
+        "songname": "只要平凡"
+      }, {
+        "singername": "张碧晨",
+        "songname": "血如墨"
+      }],
+      "topTitle": "巅峰榜·内地",
+      "type": 0
+    }, {
+      "id": 6,
+      "listenCount": 5013680,
+      "picUrl": "http://y.gtimg.cn/music/common/upload/iphone_order_channel/toplist_6_300_214094062.jpg",
+      "songList": [{
+        "singername": "陈奕迅",
+        "songname": "渐渐"
+      }, {
+        "singername": "莫文蔚",
+        "songname": "扶摇"
+      }, {
+        "singername": "徐佳莹",
+        "songname": "一爱难求"
+      }],
+      "topTitle": "巅峰榜·港台",
+      "type": 0
+    }, {
+      "id": 3,
+      "listenCount": 11278860,
+      "picUrl": "http://y.gtimg.cn/music/common/upload/iphone_order_channel/toplist_3_300_214094703.jpg",
+      "songList": [{
+        "singername": "Troye Sivan",
+        "songname": "Dance To This"
+      }, {
+        "singername": "Bebe Rexha",
+        "songname": "Ferrari"
+      }, {
+        "singername": "Martin Garrix",
+        "songname": "Ocean"
+      }],
+      "topTitle": "巅峰榜·欧美",
+      "type": 0
+    }, {
+      "id": 16,
+      "listenCount": 6810000,
+      "picUrl": "http://y.gtimg.cn/music/common/upload/iphone_order_channel/toplist_16_300_214118497.jpg",
+      "songList": [{
+        "singername": "BLACKPINK",
+        "songname": "DDU-DU DDU-DU (뚜두뚜두)"
+      }, {
+        "singername": "BLACKPINK",
+        "songname": "Forever Young"
+      }, {
+        "singername": "BLACKPINK",
+        "songname": "Really"
+      }],
+      "topTitle": "巅峰榜·韩国",
+      "type": 0
+    }, {
+      "id": 29,
+      "listenCount": 3961080,
+      "picUrl": "http://y.gtimg.cn/music/common/upload/iphone_order_channel/toplist_29_300_214172917.jpg",
+      "songList": [{
+        "singername": "张碧晨",
+        "songname": "血如墨"
+      }, {
+        "singername": "张杰",
+        "songname": "只要平凡"
+      }, {
+        "singername": "莫文蔚",
+        "songname": "扶摇"
+      }],
+      "topTitle": "巅峰榜·影视金曲",
+      "type": 0
+    }, {
+      "id": 17,
+      "listenCount": 1940000,
+      "picUrl": "http://y.gtimg.cn/music/common/upload/iphone_order_channel/toplist_17_300_214082170.jpg",
+      "songList": [{
+        "singername": "MACO (まこ)",
+        "songname": "Dear My Friend"
+      }, {
+        "singername": "水曜日のカンパネラ (星期三的康帕内拉)",
+        "songname": "かぐや姫 (辉夜姬)"
+      }, {
+        "singername": "水曜日のカンパネラ (星期三的康帕内拉)",
+        "songname": "見ざる聞かざる言わざる"
+      }],
+      "topTitle": "巅峰榜·日本",
+      "type": 0
+    }, {
+      "id": 201,
+      "listenCount": 280111,
+      "picUrl": "http://y.gtimg.cn/music/common/upload/iphone_order_channel/20150127163830.jpg",
+      "songList": [{
+        "singername": "G.E.M. 邓紫棋",
+        "songname": "爱如意"
+      }, {
+        "singername": "尤长靖",
+        "songname": "傲红尘"
+      }, {
+        "singername": "BLACKPINK",
+        "songname": "DDU-DU DDU-DU"
+      }],
+      "topTitle": "巅峰榜·MV",
+      "type": 0
+    }, {
+      "id": 52,
+      "listenCount": 1868310,
+      "picUrl": "http://y.gtimg.cn/music/common/upload/iphone_order_channel/toplist_52_300_214077540.jpg",
+      "songList": [{
+        "singername": "曹方",
+        "songname": "3170"
+      }, {
+        "singername": "Tie Yann (铁阳)",
+        "songname": "十字海星"
+      }, {
+        "singername": "左颜",
+        "songname": "痛爱"
+      }],
+      "topTitle": "巅峰榜·腾讯音乐人原创榜",
+      "type": 0
+    }, {
+      "id": 36,
+      "listenCount": 4512760,
+      "picUrl": "http://y.gtimg.cn/music/common/upload/iphone_order_channel/toplist_36_300_200732019.jpg",
+      "songList": [{
+        "singername": "胡慧",
+        "songname": "分手快乐"
+      }, {
+        "singername": "冯鑫",
+        "songname": "成都"
+      }, {
+        "singername": "胡赟兆",
+        "songname": "啷个哩个啷"
+      }],
+      "topTitle": "巅峰榜·K歌金曲",
+      "type": 0
+    }]
+  }
+}

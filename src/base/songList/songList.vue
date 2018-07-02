@@ -1,5 +1,5 @@
 <template>
-  <div class="song-list">
+  <div class="song-list" ref="songList">
     <ul>
       <li @click="selectItem(song, index)" class="item" v-for="(song, index) in songs" :key="index">
         <div class="rank" v-show="rank">
@@ -18,8 +18,10 @@
 </template>
 
 <script type="text/ecmascript-6">
+import { playlistMixin } from "assets/js/mixin";
 import loading from "base/loading/loading";
 export default {
+  mixins: [playlistMixin],
   components: {
     loading
   },
@@ -30,10 +32,19 @@ export default {
     },
     rank: {
       type: Boolean,
-      default: false
+      default: true
     }
   },
   methods: {
+    handlePlaylist(playlist) {
+      if (this.$refs.songList) {
+        const bottom = playlist.length > 0 ? "60px" : "";
+
+        this.$refs.songList.style.paddingBottom = bottom;
+        // this.$refs.toplist.refresh();
+        this.$emit("scrollRefresh");
+      }
+    },
     selectItem(item, index) {
       this.$emit("select", item, index);
     },
@@ -61,7 +72,7 @@ export default {
 .song-list {
   width: 100%;
   box-sizing: border-box;
-  padding: rem(20) rem(30) rem(55) rem(30);
+  padding: rem(20) rem(30) rem(20) rem(30);
   position: relative;
   background: rgb(34, 34, 34);
 }

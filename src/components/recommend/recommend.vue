@@ -14,8 +14,8 @@
       </div>
       <!-- 推荐歌单 -->
       <div class="gedanTitle" v-show="discList">热门歌单推荐</div>
-      <ul v-if="discList.length" class="discList-ul">
-        <li class="discList-li" v-for="(item,index) in discList" :key="index">
+      <ul v-if="discList.length" class="discList-ul" ref="discListUl">
+        <li @click="selectItem(item)" class="discList-li" v-for="(item,index) in discList" :key="index">
           <img v-lazy="item.imgurl" alt="歌单" :title="item.creator.name">
           <div class="discList-con">
             <h2>{{item.creator.name}}</h2>
@@ -27,6 +27,9 @@
     <div class="loading" v-show="discList.length === 0?1:0">
       <loading></loading>
     </div>
+    <transition name="fade">
+      <router-view></router-view>
+    </transition>
   </Scroll>
 </template>
 
@@ -37,9 +40,11 @@ import { swiper, swiperSlide } from "vue-awesome-swiper";
 import { getRecommend, getDiscList } from "api/recommend.js";
 import { ERR_OK } from "api/config";
 import loading from "base/loading/loading";
-// import { mapGetters } from "vuex";
+import { mapMutations, mapGetters } from "vuex";
+import { playlistMixin } from "assets/js/mixin";
 export default {
   name: "Recommend",
+  mixins: [playlistMixin],
   components: {
     swiper,
     swiperSlide,
@@ -66,13 +71,22 @@ export default {
   computed: {
     swiper() {
       return this.$refs.mySwiper.swiper;
-    }
-    // ...mapGetters(["playlist"])
+    },
+    ...mapGetters(["playlist"])
   },
   mounted() {
     // this.swiper.slideTo(3, 1000, false);
   },
   methods: {
+    handlePlaylist(playlist) {
+      if (this.$refs.discListUl) {
+        console.log("recomm更新")
+        const bottom = playlist.length > 0 ? "60px" : "";
+
+        this.$refs.discListUl.style.paddingBottom = bottom;
+        this.$refs.scroll.refresh();
+      }
+    },
     _getRecommend: function() {
       var that = this;
       getRecommend().then(res => {
@@ -85,7 +99,6 @@ export default {
       var that = this;
       getDiscList().then(res => {
         if (res.code === ERR_OK) {
-          // console.log(res.data.list);
           that.discList = res.data.list;
         }
       });
@@ -95,7 +108,17 @@ export default {
         this.checkloaded = true;
         this.$refs.scroll.refresh();
       }
-    }
+    },
+    // 推荐个点详情
+    selectItem(item) {
+      this.$router.push({
+        path: `/recommend/${item.dissid}`
+      });
+      this.setDisc(item);
+    },
+    ...mapMutations({
+      setDisc: "SET_DISC"
+    })
   }
 };
 </script>
@@ -128,7 +151,7 @@ export default {
 }
 .discList-ul {
   width: 100%;
-  padding-bottom: rem(30);
+  // padding-bottom: rem(30);
 }
 .discList-li {
   width: 100%;
@@ -161,5 +184,14 @@ export default {
   top: 50%;
   transform: translateY(-50%);
   // z-index: 200;
+}
+/* 子路由进去动画 */
+.fade-enter-active,
+.fade-leave-active {
+  transition: all 0.3s;
+}
+.fade-enter,
+.fade-leave-to {
+  transform: translate3d(100%, 0, 0);
 }
 </style>

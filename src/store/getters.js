@@ -14,13 +14,13 @@ export const currentIndex = state => state.currentIndex
 
 export const vkey = state => state.vkey
 
+export const disc = state => state.disc
+
 export const currentSong = (state) => {
   return state.playlist[state.currentIndex] || {}
 }
 
-// export const disc = state => state.disc
-
-// export const topList = state => state.topList
+export const topList = state => state.topList
 
 // export const searchHistory = state => state.searchHistory
 

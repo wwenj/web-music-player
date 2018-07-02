@@ -61,19 +61,9 @@ export function songUrl(vkey, mid) {
   return url
 }
 
-// export function getLyric() {
-//   if (this.lyric) {
-//     return Promise.resolve(this.lyric)
-//   }
-
-//   return new Promise((resolve, reject) => {
-//     getLyric(this.mid).then((res) => {
-//       if (res.retcode === ERR_OK) {
-//         this.lyric = Base64.decode(res.lyric)
-//         resolve(this.lyric)
-//       } else {
-//         reject('no lyric')
-//       }
-//     })
-//   })
-// }
+export function recomSongList(res) {
+  res = res.replace(/jsonCallback/, "");
+  res = res.replace(/\(/g, " ");
+  res = res.replace(/\)/g, " ");
+  return JSON.parse(res)
+}

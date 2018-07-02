@@ -9,8 +9,8 @@
       </div>
       <div class="filter" ref="filter"></div>
     </div>
-    <Scroll :data="songs" class="scroll">
-      <SongList @select="selectItem" :songs="songs" :rank="false"></SongList>
+    <Scroll :data="songs" class="scroll" ref="scroll">
+      <SongList @select="selectItem" @scrollRefresh="scrollRefresh" :songs="songs" :rank="rank"></SongList>
     </Scroll>
   </div>
 </template>
@@ -52,8 +52,16 @@ export default {
     };
   },
   methods: {
+    // handlePlaylist(playlist) {
+    //   const bottom = playlist.length > 0 ? "60px" : "";
+
+    //   this.$refs.scroll.refresh();
+    // },
     toBack: function() {
-      this.$router.push("/singer");
+      this.$router.go(-1);
+    },
+    scrollRefresh() {
+      this.$refs.scroll.refresh();
     },
     // _getLyric() {
     //   var that = this;

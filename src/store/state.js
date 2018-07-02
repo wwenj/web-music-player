@@ -9,9 +9,9 @@ const state = {
   sequenceList: [], // 顺序的列表
   mode: playMode.sequence, // 播放模式
   currentIndex: -1, // 当前播放索引
-  vkey: ""
-  // disc: {},
-  // topList: {},
+  vkey: "", // 请求歌曲播放源时的key
+  disc: "", // 推荐页详情信息
+  topList: {}
   // searchHistory: loadSearch(),
   // playHistory: loadPlay(),
   // favoriteList: loadFavorite()
