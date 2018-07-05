@@ -48,7 +48,7 @@ html {
 }
 /* 子路由进去动画 */
 .fade1-enter-active{
-  transition: all 0.3s;
+  transition: all 0.2s;
 }
 // .fade1-leave-active {
   // transition: all 0.1s;

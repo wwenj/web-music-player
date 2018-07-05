@@ -3,7 +3,7 @@
     <ul ref="rank">
       <li @click="selectItem(item)" class="item" v-for="(item, index) in topList" :key="index">
         <div class="icon">
-          <img width="100" height="100" v-lazy="item.picUrl" />
+          <img v-lazy="item.picUrl"/>
         </div>
         <ul class="songlist">
           <li class="song" v-for="(song,index) in item.songList" :key="index">
@@ -47,7 +47,7 @@ export default {
   methods: {
     handlePlaylist(playlist) {
       if (this.$refs.rank) {
-        console.log("rank更新")
+        console.log("rank更新");
         const bottom = playlist.length > 0 ? "60px" : "";
 
         this.$refs.rank.style.paddingBottom = bottom;
@@ -103,7 +103,10 @@ export default {
   width: rem(100);
   height: rem(100);
 }
-
+.icon img {
+  width: rem(100);
+  height: rem(100);
+}
 .songlist {
   flex: 1;
   display: flex;

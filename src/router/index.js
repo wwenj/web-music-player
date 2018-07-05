@@ -40,7 +40,11 @@ export default new Router({
   {
     path: '/search',
     name: 'Search',
-    component: (resolve) => require(['@/components/search/search'], resolve)
+    component: (resolve) => require(['@/components/search/search'], resolve),
+    children: [{
+      path: ':id',
+      component: (resolve) => require(['@/components/singer/components/singerDetail'], resolve)
+    }]
   }
   ]
 })

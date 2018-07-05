@@ -36,7 +36,7 @@ export default {
     _getDetail() {
       var that = this;
       if (!this.singer.id) {
-        this.$router.push("/singer");
+        this.$router.go(-1);
         return;
       }
       // 使用singer.mid作为拼接url的请求路径

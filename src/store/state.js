@@ -11,7 +11,7 @@ const state = {
   currentIndex: -1, // 当前播放索引
   vkey: "", // 请求歌曲播放源时的key
   disc: "", // 推荐页详情信息
-  topList: {}
+  topList: {} // 排行
   // searchHistory: loadSearch(),
   // playHistory: loadPlay(),
   // favoriteList: loadFavorite()

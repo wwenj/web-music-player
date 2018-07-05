@@ -35,7 +35,7 @@ export default {
   created() {
     this.$watch(
       "query",
-      debounce(newQuery => {
+      debounce(newQuery => { // 不超过200ms函数节流
         this.$emit("query", newQuery);
       }, 200)
     );
