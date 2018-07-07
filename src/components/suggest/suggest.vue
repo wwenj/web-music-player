@@ -1,6 +1,6 @@
 <template>
   <Scroll ref="scroll" :data="result" class="search-input" :pullup="pullup" :beforeScroll="beforeScroll" @scrollToEnd="serachMove" @beforeScroll="listScroll">
-    <ul class="suggest-list">
+    <ul class="suggest-list"  ref="searchUi">
       <li @click="selectItem(item)" class="suggest-item" v-for="(item, index) in result" :key="index">
         <div class="icon">
           <img v-if="getIconCls(item)" src="./people.png" alt="">
@@ -22,10 +22,12 @@ import Scroll from "base/scroll/scroll";
 import loading from "base/loading/loading";
 import Singer from "assets/js/singer";
 import { mapMutations, mapActions } from "vuex";
+import { playlistMixin } from "assets/js/mixin";
 
 const TYPE_SINGER = "Singer"; // 为歌手
 const perpage = 30; // 每次访问条数
 export default {
+  mixins: [playlistMixin],
   components: {
     Scroll,
     loading
@@ -50,6 +52,14 @@ export default {
     };
   },
   methods: {
+    handlePlaylist(playlist) {
+      if (this.$refs.searchUi) {
+        const bottom = playlist.length > 0 ? "60px" : "";
+
+        this.$refs.searchUi.style.paddingBottom = bottom;
+        this.$refs.scroll.refresh();
+      }
+    },
     search() {
       this.hasMove = true;
       this.page = 1; // 更新输入请求从第一页开始
@@ -138,10 +148,11 @@ export default {
         // 如果是歌曲直接改变当前播放列表
         this.insertSong(item);
       }
+      this.$emit("select")
     },
     /* 滚动前事件，解决移动端键盘收起问题 */
     listScroll() {
-      this.$emit("listScroll")
+      this.$emit("listScroll");
     },
     ...mapMutations({
       setSinger: "SET_SINGER"

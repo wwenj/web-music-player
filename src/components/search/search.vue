@@ -1,43 +1,56 @@
 <template>
   <div>
     <div class="search-input-box">
-      <search-input ref="searchInput" @query="queryChange"></search-input>
+      <search-input ref="searchInput" @query="queryChange" :query="query"></search-input>
     </div>
-    <div class="hotkey">
-      <h1 class="title">热门搜索</h1>
-      <span class="hotCon" v-for="(item, index) in hotkey" :key="index">{{ item.k }}</span>
-    </div>
-    <div class="search-history">
-      <h1 class="title">搜索历史</h1>
-    </div>
+    <Scroll class="scroll" ref="scroll" :data="searchHistory">
+      <div class="scroll-box">
+        <div class="hotkey">
+          <h1 class="title">热门搜索</h1>
+          <span @click="hotkeyClick(item)" class="hotCon" v-for="(item, index) in hotkey" :key="index">{{ item.k }}</span>
+        </div>
+        <div class="search-history">
+          <h1 class="title" v-show="searchHistory.length">搜索历史<img src="./del.png" alt="" @click="historyClear"></h1>
+          <historyList @select="hotkeyClick1" :searchList="searchHistory"></historyList>
+        </div>
+      </div>
+    </Scroll>
     <!-- 查找显示歌曲 -->
     <div class="search-result" v-show="query" ref="searchResult">
-      <suggest ref="suggest" @listScroll="listBulr" :query="query"></suggest>
+      <suggest ref="suggest" @listScroll="listBulr" @select="saveSearch" :query="query"></suggest>
     </div>
     <!-- 歌手详情子路由 -->
     <transition name="fade">
       <router-view></router-view>
     </transition>
+    <!-- 清空历史记录 -->
+    <confirm ref="confirm" text="是否清空所有记录" @confirm="clearSearchHistory"></confirm>
   </div>
 </template>
 
 <script>
-import { mapMutations } from "vuex";
+import { mapMutations, mapActions, mapGetters } from "vuex";
 import { ERR_OK } from "api/config";
 import { getHotKey } from "api/search";
+import Scroll from "base/scroll/scroll";
 import searchInput from "base/searchInput/searchInput";
+import historyList from "base/historyList/historyList";
+import confirm from "base/confirm/confirm";
 import suggest from "components/suggest/suggest";
 
 export default {
   name: "Rank",
   components: {
     searchInput,
-    suggest
+    suggest,
+    historyList,
+    Scroll,
+    confirm
   },
   data() {
     return {
       hotkey: [],
-      query: ""
+      query: "" // 当前搜索框内容
     };
   },
   created() {
@@ -58,9 +71,34 @@ export default {
     listBulr() {
       this.$refs.searchInput.blur();
     },
+    hotkeyClick(item) {
+      this.$refs.searchInput.queryHot(item.k);
+    },
+    // 保存当前点击列表到本地，形成历史记录
+    saveSearch() {
+      console.log(95485);
+      this.saveSearchHistory(this.query);
+    },
+    // 点击历史记录
+    hotkeyClick1(item) {
+      this.$refs.searchInput.queryHot(item);
+    },
+    // 更新历史记录页的scorll
+    hisScorll() {
+      this.$refs.scroll.refresh();
+    },
+    // 清空历史记录
+    historyClear() {
+      // this.clearSearchHistory();
+      this.$refs.confirm.show();
+    },
     ...mapMutations({
       setTopList: "SET_TOP_LIST"
-    })
+    }),
+    ...mapActions(["saveSearchHistory", "clearSearchHistory"])
+  },
+  computed: {
+    ...mapGetters(["searchHistory"])
   }
 };
 </script>
@@ -72,15 +110,16 @@ export default {
   margin-top: rem(20);
   padding: 0 rem(20);
   box-sizing: border-box;
+  margin-bottom: rem(30);
 }
 .hotkey {
   width: 100%;
   min-height: rem(136);
-  max-height: rem(200);
+  max-height: rem(220);
   overflow: hidden;
   padding: 0 rem(20);
   box-sizing: border-box;
-  margin: rem(30) 0 rem(20) 0;
+  margin: 0 0 rem(20) 0;
 }
 .title {
   color: rgba(255, 255, 255, 0.5);
@@ -117,5 +156,18 @@ export default {
 .fade-enter,
 .fade-leave-to {
   transform: translate3d(100%, 0, 0);
+}
+.title img {
+  width: rem(18);
+  height: rem(18);
+  float: right;
+}
+.scroll {
+  width: 100%;
+  height: 73vh;
+  overflow: hidden;
+}
+.scroll-box {
+  padding-bottom: rem(50);
 }
 </style>

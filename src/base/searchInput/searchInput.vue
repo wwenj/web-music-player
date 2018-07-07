@@ -30,12 +30,16 @@ export default {
     },
     blur() {
       this.$refs.query.blur();
+    },
+    queryHot(queryHot) {
+      this.query = queryHot;
     }
   },
   created() {
     this.$watch(
       "query",
-      debounce(newQuery => { // 不超过200ms函数节流
+      debounce(newQuery => {
+        // 不超过200ms函数节流
         this.$emit("query", newQuery);
       }, 200)
     );

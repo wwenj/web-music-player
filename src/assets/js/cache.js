@@ -10,15 +10,15 @@ const FAVORITE_KEY = '__favorite__'
 const FAVORITE_MAX_LEN = 200
 
 function insertArray(arr, val, compare, maxLen) {
-  const index = arr.findIndex(compare)
-  if (index === 0) {
+  const index = arr.findIndex(compare) // 查找与插入元素相同的数组元素的索引
+  if (index === 0) { // 如果当前数组只有这一项，直接返回
     return
   }
-  if (index > 0) {
+  if (index > 0) { // 如果有这一项先删除这一项
     arr.splice(index, 1)
   }
-  arr.unshift(val)
-  if (maxLen && arr.length > maxLen) {
+  arr.unshift(val) // 把新元素插入数组前端
+  if (maxLen && arr.length > maxLen) { // 如果当前素注射元素个数超过20，把数组最早的元素删除
     arr.pop()
   }
 }
@@ -53,7 +53,7 @@ export function clearSearch() {
   return []
 }
 
-export function loadSearch() {
+export function loadSearch() { // 每次刷新把本地存储赋到state
   return storage.get(SEARCH_KEY, [])
 }
 
@@ -91,4 +91,3 @@ export function deleteFavorite(song) {
 export function loadFavorite() {
   return storage.get(FAVORITE_KEY, [])
 }
-

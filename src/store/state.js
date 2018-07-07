@@ -1,5 +1,5 @@
 import {playMode} from 'assets/js/config'
-// import {loadSearch, loadPlay, loadFavorite} from 'common/js/cache'
+import {loadSearch} from 'assets/js/cache'
 
 const state = {
   singer: {}, // 歌手页面列表，某个歌手的相关数据对象使用头像与名称
@@ -11,8 +11,8 @@ const state = {
   currentIndex: -1, // 当前播放索引
   vkey: "", // 请求歌曲播放源时的key
   disc: "", // 推荐页详情信息
-  topList: {} // 排行
-  // searchHistory: loadSearch(),
+  topList: {}, // 排行
+  searchHistory: loadSearch() // loadSearch()
   // playHistory: loadPlay(),
   // favoriteList: loadFavorite()
 }
