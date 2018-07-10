@@ -5,7 +5,7 @@ function getRandomInt(min, max) { // 返回两个数的打乱数
 export function shuffle(arr) {
   let _arr = arr.slice()
   for (let i = 0; i < _arr.length; i++) {
-    let j = getRandomInt(0, _arr.length-1)
+    let j = getRandomInt(0, _arr.length - 1)
     let t = _arr[i]
     _arr[i] = _arr[j]
     _arr[j] = t
@@ -25,3 +25,4 @@ export function debounce(func, delay) {
     }, delay)
   }
 }
+

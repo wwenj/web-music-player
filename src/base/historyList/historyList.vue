@@ -20,10 +20,10 @@ export default {
   },
   methods: {
     handlePlaylist(playlist) {
-        const bottom = playlist.length > 0 ? "25px" : "";
+      const bottom = playlist.length > 0 ? "25px" : "";
 
-        this.$refs.historyUl.style.paddingBottom = bottom;
-        this.$emit("hisScorll");
+      this.$refs.historyUl.style.paddingBottom = bottom;
+      this.$emit("hisScorll");
     },
     selectItem(item) {
       // 点击搜索历史列表

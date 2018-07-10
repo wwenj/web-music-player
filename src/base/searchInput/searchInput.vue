@@ -29,10 +29,15 @@ export default {
       this.query = query;
     },
     blur() {
+      // 文本框失焦，移动端去掉小键盘
       this.$refs.query.blur();
     },
     queryHot(queryHot) {
+      // 热门搜索
       this.query = queryHot;
+    },
+    wang(nav) {
+      console.log(nav);
     }
   },
   created() {

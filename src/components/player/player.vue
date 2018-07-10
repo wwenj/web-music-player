@@ -70,12 +70,14 @@
             <img v-if="playing" src="./playStrop.png" alt="">
             <img v-if="!playing" src="./playButton.png" alt="">
           </span>
-          <span class="playList">
+          <span class="playList" @click.stop="playListClick">
             <img src="./playList.png" alt="播放按钮" title="播放">
           </span>
         </div>
       </div>
     </div>
+    <!-- 查看播放歌曲列表 -->
+    <playList ref="playList"></playList>
   </div>
 </template>
 <script>
@@ -85,6 +87,7 @@ import { shuffle } from "assets/js/util";
 import { getVkey, getLyric } from "api/song";
 import { ERR_OK } from "api/config";
 import progressBar from "./components/progress-bar";
+import playList from "components/playList/playList";
 import { playMode } from "assets/js/config";
 import { Base64 } from "js-base64";
 import Lyric from "lyric-parser";
@@ -93,7 +96,8 @@ import Scroll from "base/scroll/scroll";
 export default {
   components: {
     progressBar,
-    Scroll
+    Scroll,
+    playList
   },
   computed: {
     ...mapGetters([
@@ -138,6 +142,10 @@ export default {
     // this._songUrl();
   },
   methods: {
+    /* 点击播放列表 */
+    playListClick() {
+      this.$refs.playList.show();
+    },
     /* 播放按钮点击 */
     togglePlaying() {
       // 停止/播放当前歌词播放

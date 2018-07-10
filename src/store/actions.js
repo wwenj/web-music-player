@@ -95,17 +95,17 @@ export const insertSong = function ({ // 搜索页添加歌曲到播放列表
   commit(types.SET_PLAYING_STATE, true)
 }
 
-export const saveSearchHistory = function ({
+export const saveSearchHistory = function ({ // 保存一个历史记录
   commit
 }, query) {
   commit(types.SET_SEARCH_HISTORY, saveSearch(query))
 }
 
-export const deleteSearchHistory = function ({commit}, query) {
+export const deleteSearchHistory = function ({commit}, query) { // 删除某一个记录
   commit(types.SET_SEARCH_HISTORY, deleteSearch(query))
 }
 
-export const clearSearchHistory = function ({commit}) {
+export const clearSearchHistory = function ({commit}) { // 清除所有记录
   commit(types.SET_SEARCH_HISTORY, clearSearch())
 }
 
@@ -139,14 +139,14 @@ export const clearSearchHistory = function ({commit}) {
 //   commit(types.SET_PLAYING_STATE, false)
 // }
 
-// export const savePlayHistory = function ({commit}, song) {
-//   commit(types.SET_PLAY_HISTORY, savePlay(song))
-// }
+export const savePlayHistory = function ({commit}, song) {
+  commit(types.SET_PLAY_HISTORY, savePlay(song))
+}
 
-// export const saveFavoriteList = function ({commit}, song) {
-//   commit(types.SET_FAVORITE_LIST, saveFavorite(song))
-// }
+export const saveFavoriteList = function ({commit}, song) {
+  commit(types.SET_FAVORITE_LIST, saveFavorite(song))
+}
 
-// export const deleteFavoriteList = function ({commit}, song) {
-//   commit(types.SET_FAVORITE_LIST, deleteFavorite(song))
-// }
+export const deleteFavoriteList = function ({commit}, song) {
+  commit(types.SET_FAVORITE_LIST, deleteFavorite(song))
+}
