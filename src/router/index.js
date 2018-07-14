@@ -45,6 +45,11 @@ export default new Router({
       path: ':id',
       component: (resolve) => require(['@/components/singer/components/singerDetail'], resolve)
     }]
+  },
+  {
+    path: '/user',
+    name: 'User',
+    component: (resolve) => require(['@/components/userCenter/userCenter'], resolve)
   }
   ]
 })

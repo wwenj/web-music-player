@@ -70,7 +70,7 @@ export function loadPlay() {
   return storage.get(PLAY_KEY, [])
 }
 
-export function saveFavorite(song) {
+export function saveFavorite(song) { // 保存收藏
   let songs = storage.get(FAVORITE_KEY, [])
   insertArray(songs, song, (item) => {
     return song.id === item.id
@@ -79,7 +79,7 @@ export function saveFavorite(song) {
   return songs
 }
 
-export function deleteFavorite(song) {
+export function deleteFavorite(song) { // 取消收藏
   let songs = storage.get(FAVORITE_KEY, [])
   deleteFromArray(songs, (item) => {
     return item.id === song.id

@@ -13,8 +13,8 @@ const state = {
   disc: "", // 推荐页详情信息
   topList: {}, // 排行
   searchHistory: loadSearch(), // loadSearch()
-  playHistory: loadPlay(),
-  favoriteList: loadFavorite()
+  playHistory: loadPlay(), // 播放历史
+  favoriteList: loadFavorite() // 收藏歌曲
 }
 
 export default state

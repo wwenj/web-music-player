@@ -9,15 +9,15 @@
             <img v-if="modeText === '单曲循环'" src="./img/loop.png" alt="单曲">
             <img v-if="modeText === '随机播放'" src="./img/random.png" alt="随机">
             <span>{{modeText}}</span>
-            <span class="del">
+            <span class="del" @click="showConfirm">
               <img src="./img/del.png" alt="清空">
             </span>
           </h1>
         </div>
         <!-- 歌曲列表 -->
         <Scroll class="list-con" :data="sequenceList" ref="listContent">
-          <ul>
-            <li v-for="(item, index) in sequenceList" :key="index">
+          <transition-group ref="list" name="list-li" tag="ul">
+            <li ref="listItem" v-for="(item, index) in sequenceList" :key="index" @click="selectItem(item, index)">
               <div class="lihear-img-box">
                 <img v-if="getCurrentIcon(item)" src="./img/playButton.png" alt="">
               </div>
@@ -25,30 +25,42 @@
               <div class="list-end">
                 <img v-if="collect" src="./img/collect.png" alt="">
                 <img v-else src="./img/collect2.png" alt="">
-                <img class="cha" src="./img/smldel.png" alt="">
+                <img @click.stop="deleteOne(item)" class="cha" src="./img/smldel.png" alt="">
               </div>
             </li>
-          </ul>
+          </transition-group>
         </Scroll>
         <div class="list-operate">
           <div class="add-song">
             <img src="./img/songListAdd.png" alt="添加歌曲">
-            <span class="text">添加歌曲到队列</span>
+            <span class="text" @click="showAddSong">添加歌曲到队列</span>
           </div>
         </div>
         <div @click="hide" class="list-close">
           <span>关闭</span>
         </div>
       </div>
+      <!-- 确认清除 -->
+      <confirm ref="confirm" @confirm="confirmClear" text="是否清空播放列表" confirmBtnText="清空"></confirm>
+      <!-- 添加播放列表 -->
+      <addSong ref="addSong" class="addSong"></addSong>
+      <!-- 弹出提示信息 -->
+      <TopTip ref="topTip">
+        <div class="tip-title">
+          <span class="text">已从播放列表中删除</span>
+        </div>
+      </TopTip>
     </div>
   </transition>
 </template>
 <script type="text/ecmascript-6">
-import { mapGetters } from "vuex";
+import { mapGetters, mapMutations, mapActions } from "vuex";
 import { playMode } from "assets/js/config";
 import Scroll from "base/scroll/scroll";
 import Confirm from "base/confirm/confirm";
+import addSong from "components/addSong/addSong";
 import { playerMixin } from "assets/js/mixin";
+import TopTip from "base/topTip/topTip";
 
 export default {
   mixins: [playerMixin],
@@ -61,7 +73,9 @@ export default {
   },
   components: {
     Scroll,
-    Confirm
+    Confirm,
+    addSong,
+    TopTip
   },
   computed: {
     modeText() {
@@ -69,12 +83,13 @@ export default {
         ? "顺序播放"
         : this.mode === playMode.random ? "随机播放" : "单曲循环";
     },
-    ...mapGetters(["sequenceList", "currentSong"])
+    ...mapGetters(["sequenceList", "currentSong", "playlist", "mode"])
   },
   methods: {
     show() {
       this.showFlag = true;
-      setTimeout(() => { // dom渲染后再去计算
+      setTimeout(() => {
+        // dom渲染后再去计算
         this.$refs.listContent.refresh();
         this.scrollToCurrent(this.currentSong);
       }, 20);
@@ -89,21 +104,59 @@ export default {
       }
       return false;
     },
+    /* 进入播放列表时跳转到当前播放歌曲的位置 */
     scrollToCurrent(current) {
       const index = this.sequenceList.findIndex(song => {
         return current.id === song.id;
       });
-      this.$refs.listContent.scrollToElement(
-        this.$refs.list.$el.children[index],
-        300
-      );
+      this.$refs.listContent.scrollToElement(this.$refs.listItem[index], 300);
     },
-    showConfirm() {},
-    changeMode() {},
-    selectItem() {},
-    toggleFavorite() {},
-    deleteOne() {},
-    addSong() {}
+    // 清空列表弹出确认组件
+    showConfirm() {
+      this.$refs.confirm.show();
+    },
+    // 确认清空列表
+    confirmClear() {
+      this.deleteSongList();
+    },
+    /* 歌曲列表点击 */
+    selectItem(item, index) {
+      this.showFlag = false;
+      if (this.mode === playMode.random) {
+        index = this.playlist.findIndex(song => {
+          return song.id === item.id;
+        });
+      }
+      this.setCurrentIndex(index);
+      this.setPlayingState(true);
+    },
+    // 删除当前播放列表中的某一条
+    deleteOne(item) {
+      this.deleteSong(item);
+      this.$refs.topTip.show();
+      if (!this.playlist.length) {
+        this.hide();
+      }
+    },
+    // 给播放列表添加歌曲
+    showAddSong() {
+      this.$refs.addSong.show();
+    },
+    ...mapMutations({
+      setCurrentIndex: "SET_CURRENT_INDEX",
+      setPlayingState: "SET_PLAYING_STATE"
+    }),
+    ...mapActions(["deleteSong", "deleteSongList"])
+  },
+  watch: {
+    currentSong(newSong, oldSong) {
+      if (!this.showFlag || newSong.id === oldSong.id) {
+        return;
+      }
+      setTimeout(() => {
+        this.scrollToCurrent(newSong);
+      }, 20);
+    }
   }
 };
 </script>
@@ -244,5 +297,24 @@ export default {
 .list-fade-enter-active,
 .list-fade-leave-active {
   transition: all 0.3s;
+}
+// 删除列表动画
+.list-li-enter-active,
+.list-li-leave-active {
+  transition: all 0.2s linear;
+}
+.list-li-enter,
+.list-li-leave-to {
+  height: 0;
+}
+.tip-title {
+  text-align: center;
+  padding: rem(18) 0;
+  font-size: 0;
+}
+
+.tip-title .text {
+  font-size: rem(14);
+  color: #fff;
 }
 </style>

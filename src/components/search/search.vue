@@ -76,7 +76,6 @@ export default {
     },
     // 保存当前点击列表到本地，形成历史记录
     saveSearch() {
-      console.log(95485);
       this.saveSearchHistory(this.query);
     },
     // 点击历史记录

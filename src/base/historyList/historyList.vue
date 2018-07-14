@@ -4,12 +4,18 @@
       <p class="text">{{item}}</p>
       <img @click.stop="selectItemDel(item)" src="./sdel.png" alt="删除" title="删除">
     </li>
+    <!-- <TopTip ref="topTip">
+      <div class="tip-title">
+        <span class="text">已从历史记录中删除</span>
+      </div>
+    </TopTip> -->
   </ul>
 </template>
 
 <script>
 import { mapGetters, mapActions } from "vuex";
 import { playlistMixin } from "assets/js/mixin";
+// import TopTip from "base/topTip/topTip";
 export default {
   mixins: [playlistMixin],
   name: "historyList",
@@ -17,6 +23,9 @@ export default {
     searchList: {
       type: Array
     }
+  },
+  components: {
+    // TopTip
   },
   methods: {
     handlePlaylist(playlist) {
@@ -32,6 +41,7 @@ export default {
     selectItemDel(item) {
       // 点击某个历史列表叉号
       this.deleteSearchHistory(item);
+      // this.$refs.topTip.show();
     },
     ...mapActions(["deleteSearchHistory"])
   },
@@ -63,4 +73,14 @@ export default {
 .text {
   display: inline-block;
 }
+// .tip-title {
+//   text-align: center;
+//   padding: rem(18) 0;
+//   font-size: 0;
+// }
+
+// .tip-title .text {
+//   font-size: rem(14);
+//   color: #fff;
+// }
 </style>

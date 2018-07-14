@@ -51,7 +51,10 @@
             <img v-if="!playing" id="playButton" src="./playButton.png" alt="">
           </span>
           <span @click="next"><img src="./btnImg/next.png" alt=""></span>
-          <span><img src="./btnImg/collect.png" alt=""></span>
+          <span @click="toggleFavoriteList(currentSong)">
+            <img v-if="getFavoriteListCollect(currentSong)" src="./btnImg/collect.png" alt="收藏">
+            <img v-else src="./btnImg/collect2.png" alt="收藏">
+          </span>
         </div>
         <!-- 音乐播放器 -->
         <audio ref="audio" @canplay="audioReady" @error="audioError" @timeupdate="timeUpdate" @ended="songEnd"></audio>
@@ -81,7 +84,7 @@
   </div>
 </template>
 <script>
-import { mapGetters, mapMutations } from "vuex";
+import { mapGetters, mapMutations, mapActions } from "vuex";
 import { songUrl } from "assets/js/song";
 import { shuffle } from "assets/js/util";
 import { getVkey, getLyric } from "api/song";
@@ -108,7 +111,8 @@ export default {
       "playing",
       "currentIndex",
       "mode",
-      "sequenceList"
+      "sequenceList",
+      "favoriteList" // 收藏
     ]),
     percent() {
       return this.currentTime / this.currentSong.duration;
@@ -142,6 +146,29 @@ export default {
     // this._songUrl();
   },
   methods: {
+    // 收藏显示
+    getFavoriteListCollect(song) {
+      if (this.isFavoriteList(song)) {
+        return false;
+      } else {
+        return true;
+      }
+    },
+    // 点击收藏
+    toggleFavoriteList(song) {
+      if (this.isFavoriteList(song)) {
+        this.deleteFavoriteList(song);
+      } else {
+        this.saveFavoriteList(song);
+      }
+    },
+    // 判断当前播放歌曲是否收藏
+    isFavoriteList(song) {
+      const index = this.favoriteList.findIndex(item => {
+        return item.id === song.id;
+      });
+      return index > -1;
+    },
     /* 点击播放列表 */
     playListClick() {
       this.$refs.playList.show();
@@ -196,6 +223,7 @@ export default {
     /* 歌曲加载成功 */
     audioReady() {
       this.songReadey = true; // 当前歌曲还未加载完成时禁止跳转其他歌曲
+      this.savePlayHistory(this.currentSong); // 播放歌曲存入本地播放记录
     },
     audioError() {
       console.log("当前歌曲加载失败，请尝试其他歌曲");
@@ -365,7 +393,8 @@ export default {
       setVkey: "SET_VKEY",
       setPlayMode: "SET_PLAY_MODE",
       setPlayList: "SET_PLAYLIST"
-    })
+    }),
+    ...mapActions(["savePlayHistory", "saveFavoriteList", "deleteFavoriteList"])
   },
   watch: {
     vkey: function(val, oldVal) {
@@ -376,6 +405,10 @@ export default {
     },
     // 检测当前播放歌曲变化
     currentSong(newSong, oldSong) {
+      if (!newSong.id) {
+        // 当清空播放列表时，newSong为空，则直接跳过下面操作
+        return;
+      }
       if (newSong === oldSong) {
         // 当currentSong播放列表因为点击播放方式改变时，不做操作
         return;

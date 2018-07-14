@@ -4,9 +4,10 @@
       <img src="./logo.png" alt="logo">
       <span class="title">Listen World</span>
     </div>
-    <span class="icon-mine">
+    <router-link to="/user" class="icon-mine" tag="span">
       <img src="./icon-mine.png" alt="">
-    </span>
+    </router-link>
+
   </div>
 </template>
 
@@ -36,7 +37,7 @@ export default {
   box-sizing: border-box;
   z-index: 100;
 }
-.header-con{
+.header-con {
   display: inline;
   margin: auto;
 }
@@ -53,7 +54,7 @@ img {
   font-size: rem(18);
   margin-left: rem(5);
 }
-.icon-mine{
+.icon-mine {
   width: rem(44);
   height: rem(44);
   line-height: rem(44);
@@ -62,7 +63,7 @@ img {
   top: 0;
   right: 0;
 }
-.icon-mine img{
+.icon-mine img {
   width: rem(25);
   height: rem(25);
   vertical-align: middle;
