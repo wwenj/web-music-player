@@ -33,7 +33,7 @@
 ### 页面
 
 1. **推荐页：** 轮播，推荐歌单，点击跳转详情组件 下3同
-2. **歌手页： ** 按姓氏首字母排列，点击侧面字母栏跳转到对应歌手区域
+2. **歌手页：** 按姓氏首字母排列，点击侧面字母栏跳转到对应歌手区域
 3. **排行页：** 几种榜单，详情页显示排行数字
 4. **搜索页：** 搜索框**监听**内容变化显示搜索结果，搜索结果**上拉加载**，点击搜索结果添加到当前播放列表并播放该歌曲，搜索为歌手跳转歌手详情页；保存**搜索历史**，显示**热门搜索**标签
 5. **个人页：** 选项卡显示**最近播放**历史，与我的**收藏列表**
@@ -50,9 +50,9 @@
 - 15个业务组件，9个基础组件
 - 详情组件，歌曲列表组件，搜索框组件，scroll组件，loading组件等组件多**复用**
 - **vuex集中状态管理** ：
-  1. 搜索历史，收藏列表，播放历史
-  2. 播放状态，播放模式，收起播放页，当前播放索引
-  3. 排行榜数据，推荐歌单数据，歌手数据（进入详情页使用）
+  - 搜索历史，收藏列表，播放历史
+  - 播放状态，播放模式，收起播放页，当前播放索引
+  - 排行榜数据，推荐歌单数据，歌手数据（进入详情页使用）
 - 模块化：js模块写在assets内，数据请求模块写在api内，vuex写在mutation.js，state.js，getters.js，action.js中
 - **移动端适配**：淘宝适配方案`amfe-flexible`，用sass函数统一`rem`为正常px逻辑单位
 - 几种历史记录收藏列表存储在**localStorage**
@@ -93,17 +93,20 @@
 ## 项目运行
 
 ``` bash
+# 克隆项目
+git clone git@github.com:wwenj/web-music-player.git
+
 # 下载依赖
 npm install
 
-# serve with hot reload at localhost:8081
+# 运行项目 打开端口localhost:8081
 npm run dev
 
-# build for production with minification
+# 项目打包
 npm run build
 
-# build for production and view the bundle analyzer report
-npm run build --report
 ```
 
-作者 [[王文健\]](http://www.wwenj.com/)  2018 年 7月 15日 
+作者 [[王文健\]](http://www.wwenj.com/)    
+
+2018 年 7月 15日 
