@@ -1,6 +1,6 @@
-# web-music-player
+# Vue音乐播放器webapp
 
-> 基于veu全家桶动端动端音乐播放器webapp
+##项目截图
 
 ## Build Setup
 
