@@ -1,6 +1,8 @@
 # Vue音乐播放器webapp
 
-##项目截图
+## 项目截图
+
+![首页](https://github.com/wwenj/web-music-player/tree/master/screenshot)
 
 ## Build Setup
 
