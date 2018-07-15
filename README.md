@@ -2,7 +2,13 @@
 
 ## 项目截图
 
-![首页](https://github.com/wwenj/web-music-player/blob/master/screenshot/1.jpg)
+![推荐页，排行页，歌手页](https://github.com/wwenj/web-music-player/blob/master/screenshot/1.jpg)
+
+![搜索页，我的收藏](https://github.com/wwenj/web-music-player/blob/master/screenshot/2.jpg)
+
+![搜索页，我的收藏](https://github.com/wwenj/web-music-player/blob/master/screenshot/3.jpg)
+
+![搜索页，我的收藏](https://github.com/wwenj/web-music-player/blob/master/screenshot/4.jpg)
 
 ## Build Setup
 
