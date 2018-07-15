@@ -2,7 +2,7 @@
 
 ## 项目截图
 
-![首页](https://github.com/wwenj/web-music-player/tree/master/screenshot)
+![首页](https://github.com/wwenj/web-music-player/tree/master/screenshot/1.jpg)
 
 ## Build Setup
 
