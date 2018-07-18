@@ -23,8 +23,10 @@
               </div>
               <p class="list2-con">{{ item.name }}</p>
               <div class="list-end">
-                <img v-if="collect" src="./img/collect.png" alt="">
-                <img v-else src="./img/collect2.png" alt="">
+                <span class="collect-box" @click.stop="toggleFavoriteList(item)">
+                  <img v-if="getFavoriteListCollect(item)" src="./img/collect.png" alt="">
+                  <img v-else src="./img/collect2.png" alt="">
+                </span>
                 <img @click.stop="deleteOne(item)" class="cha" src="./img/smldel.png" alt="">
               </div>
             </li>
@@ -68,7 +70,7 @@ export default {
     return {
       showFlag: false,
       refreshDelay: 120,
-      collect: true
+      collect: false
     };
   },
   components: {
@@ -138,6 +140,30 @@ export default {
         this.hide();
       }
     },
+    // 添加收藏
+    getFavoriteListCollect(song) {
+      if (this.isFavoriteList(song)) {
+        return false;
+      } else {
+        return true;
+      }
+    },
+    // 点击收藏
+    toggleFavoriteList(song) {
+      if (this.isFavoriteList(song)) {
+        this.deleteFavoriteList(song);
+        // this.$refs.topTip.show();
+      } else {
+        this.saveFavoriteList(song);
+      }
+    },
+    // 判断当前播放歌曲是否收藏
+    isFavoriteList(song) {
+      const index = this.favoriteList.findIndex(item => {
+        return item.id === song.id;
+      });
+      return index > -1;
+    },
     // 给播放列表添加歌曲
     showAddSong() {
       this.$refs.addSong.show();
@@ -146,7 +172,12 @@ export default {
       setCurrentIndex: "SET_CURRENT_INDEX",
       setPlayingState: "SET_PLAYING_STATE"
     }),
-    ...mapActions(["deleteSong", "deleteSongList"])
+    ...mapActions([
+      "deleteSong",
+      "deleteSongList",
+      "saveFavoriteList",
+      "deleteFavoriteList"
+    ])
   },
   watch: {
     currentSong(newSong, oldSong) {
@@ -250,7 +281,7 @@ export default {
   // margin-right: rem(12);
 }
 .cha {
-  margin-left: rem(20);
+  margin-left: rem(10);
 }
 .list-operate {
   width: rem(140);
@@ -316,5 +347,10 @@ export default {
 .tip-title .text {
   font-size: rem(14);
   color: #fff;
+}
+.collect-box {
+  display: inline-block;
+  width: rem(25);
+  height: rem(40);
 }
 </style>

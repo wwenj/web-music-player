@@ -47,7 +47,6 @@ export default {
   methods: {
     handlePlaylist(playlist) {
       if (this.$refs.rank) {
-        console.log("rank更新");
         const bottom = playlist.length > 0 ? "60px" : "";
 
         this.$refs.rank.style.paddingBottom = bottom;

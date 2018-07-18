@@ -4,7 +4,7 @@ import {
 import axios from 'axios'
 
 export function getLyric(mid) {
-  const url = '/lyric'
+  const url = '/api/lyric'
 
   const data = Object.assign({}, commonParams, {
     songmid: mid,
@@ -25,7 +25,7 @@ export function getLyric(mid) {
 
 /* 获取播放源连接密钥 */
 export function getVkey(songmid) {
-  const url = '/vkey'
+  const url = '/api/vkey'
 
   const data = Object.assign({}, commonParams, {
     songmid: songmid,

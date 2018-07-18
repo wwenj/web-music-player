@@ -19,7 +19,7 @@ export function getRecommend() {
 }
 
 export function getDiscList() {
-  const url = '/getDiscList'
+  const url = '/api/getDiscList'
   const data = Object.assign({}, commonParams, {
     platform: 'yqq',
     hostUin: 0,
@@ -57,7 +57,7 @@ export function getDiscList() {
 // }
 
 export function getSongList(disstid) {
-  const url = '/songList'
+  const url = '/api/songList'
 
   const data = Object.assign({}, commonParams, {
     disstid: disstid,

@@ -1,6 +1,6 @@
 <template>
   <div class="app">
-    <Scroll v-if="singers.length" :data="singers" class="scroll" :listenScroll="listenScroll" ref="scrollView" @scroll="scroll">
+    <Scroll v-if="singers.length" :data="singers" class="scroll" :listenScroll="listenScroll" ref="scrollView">
       <ul ref="singerUl">
         <li class="li-box" v-for="(item1, index) in singers" :key="index" ref="listView">
           <h2 class="title">{{item1.title}}</h2>
@@ -60,7 +60,6 @@ export default {
   methods: {
     handlePlaylist(playlist) {
       if (this.$refs.singerUl) {
-        console.log("singer更新")
         const bottom = playlist.length > 0 ? "60px" : "";
 
         this.$refs.singerUl.style.paddingBottom = bottom;
@@ -72,7 +71,7 @@ export default {
       getSingerList().then(res => {
         if (res.code === ERR_OK) {
           that.singers = res.data.list;
-          // console.log(that.singers);
+          //  (that.singers);
           that._newData(res.data.list);
         }
       });
@@ -135,15 +134,14 @@ export default {
       }
       newList2.sort(compare("title"));
       this.singers = newList2;
-      // console.log(this.singers);
     },
     toTouchScroll: function(index) {
       // alert('5')
       this.$refs.scrollView.scrollToElement(this.$refs.listView[index], 0);
     },
-    scroll: function(pos) {
-      // console.log(pos.y);
-    },
+    // scroll: function(pos) {
+    //   // console.log(pos.y);
+    // },
     toSingerDetail: function(item) {
       this.$router.push({
         path: `/singer/${item.id}`

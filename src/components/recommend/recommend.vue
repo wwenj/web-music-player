@@ -80,7 +80,6 @@ export default {
   methods: {
     handlePlaylist(playlist) {
       if (this.$refs.discListUl) {
-        console.log("recomm更新")
         const bottom = playlist.length > 0 ? "60px" : "";
 
         this.$refs.discListUl.style.paddingBottom = bottom;

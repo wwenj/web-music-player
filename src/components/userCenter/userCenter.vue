@@ -8,19 +8,21 @@
         <switches @switch="switchItem" :switches="switches" :currentIndex="currentIndex"></switches>
       </div>
 
-      <div ref="playBtn" class="play-btn">
-        <span class="text">随机播放全部</span>
+      <div ref="playBtn" class="play-btn" @click="allPlay">
+        <span class="text">播放列表全部</span>
       </div>
       <div class="list-wrapper" ref="listWrapper">
         <scroll ref="favoriteList" class="list-scroll" v-if="currentIndex===0" :data="favoriteList">
-          <div class="list-inner1">
+          <div class="list-inner1" v-if="favoriteList.length !== 0">
             <SongList :songs="favoriteList" :rank="false" @select="selectSong"></SongList>
           </div>
+          <div class="no-result" v-else>暂无内容</div>
         </scroll>
         <scroll ref="playList" class="list-scroll" v-if="currentIndex===1" :data="playHistory">
-          <div class="list-inner1">
+          <div class="list-inner1" v-if="playHistory.length !== 0">
             <SongList :songs="playHistory" :rank="false" @select="selectSong"></SongList>
           </div>
+          <div class="no-result" v-else>暂无内容</div>
         </scroll>
       </div>
       <!--
@@ -37,7 +39,7 @@ import Scroll from "base/scroll/scroll";
 import SongList from "base/songList/songList";
 // import NoResult from "base/no-result/no-result";
 import Song from "assets/js/song";
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters, mapActions, mapMutations } from "vuex";
 // import { playlistMixin } from "assets/js/mixin";
 
 export default {
@@ -90,19 +92,28 @@ export default {
     back() {
       this.$router.back();
     },
-    // random() {
-    //   let list = this.currentIndex === 0 ? this.favoriteList : this.playHistory;
-    //   if (list.length === 0) {
-    //     return;
-    //   }
-    //   list = list.map(song => {
-    //     return new Song(song);
-    //   });
-    //   this.randomPlay({
-    //     list
-    //   });
-    // },
-    ...mapActions(["insertSong", "randomPlay"])
+    allPlay() {
+      if (this.currentIndex === 0) {
+        if (this.favoriteList) {
+          this.setSequenceList(this.favoriteList.slice());
+          this.setPlayList(this.favoriteList.slice());
+        }
+      } else {
+        if (this.playHistory) {
+          this.setSequenceList(this.playHistory.slice());
+          this.setPlayList(this.playHistory.slice());
+        }
+      }
+      this.setCurrentIndex(0);
+      this.setPlayingState(true);
+    },
+    ...mapActions(["insertSong", "randomPlay"]),
+    ...mapMutations({
+      setPlayList: "SET_PLAYLIST",
+      setSequenceList: "SET_SEQUENCE_LIST",
+      setCurrentIndex: "SET_CURRENT_INDEX",
+      setPlayingState: "SET_PLAYING_STATE"
+    })
   },
   components: {
     Switches,
@@ -193,5 +204,11 @@ export default {
   width: 100%;
   top: 50%;
   transform: translateY(-50%);
+}
+.no-result {
+  text-align: center;
+  margin-top: 40%;
+  font-size: rem(20);
+  color: hsla(0, 0%, 100%, 0.4);
 }
 </style>
